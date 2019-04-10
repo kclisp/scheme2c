@@ -1,0 +1,42 @@
+Compiling Scheme to C
+
+HIGH LEVEL
+Have an interpreter written in C for runtime
+  - treat C as underlying hardware
+  - treat variables as registers in an abstract machine
+  - Nan tagging for efficiency
+
+Benefits
+  - able to do compiler optimizations
+  - able to be extended to have low level operations
+
+Have the base library written in C
+Use SICP's compiler as an intermediate; compile the output to C
+
+TYPES
+via Nan tagging:
+  - floats have many Nans -- let's use those to encode other types
+  - 64 bit floats, IEEE 754 standard
+    - 1 sign, 11 exponent, and 52 fraction bits
+    - if E is all ones
+      - if (= F 0) => infinity
+      - else (not (= F 0)) => Nan
+  - keep one of the Nans to actually be Nan
+    
+float
+fff...ff
+(not (= F 0))
+
+integers (51 bits)
+?1..11ii..i
+exp: 1s
+F:1ii..i
+
+pointer (49 bits)
+?1...10ttpp..p
+exp:1s
+F:0ttpp..pp
+tags: 00 cons
+      01 symbol
+      10 string
+      11 vector
