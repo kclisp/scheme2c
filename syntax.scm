@@ -23,6 +23,7 @@
 
 (define (restore? exp)
   (tagged-list? exp 'restore))
+(define restore-arg cadr)
 
 (define (perform? exp)
   (tagged-list? exp 'perform))

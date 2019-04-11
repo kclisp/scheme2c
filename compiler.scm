@@ -2,7 +2,7 @@
 (load "syntax.scm")
 
 (define (compile-to-c exp)
-  (ccompile-sequence (sanitize (caddr (compile exp 'val 'next)))))
+  (sanitize (ccompile-sequence (caddr (compile exp 'val 'next)))))
 
 (define (ccompile-sequence seq)
   (string-append* (map ccompile seq)))
@@ -45,26 +45,11 @@
   (line "if (flag) {\n" (ccompile-goto `(goto ,@(cdr exp))) "}"))
 
 ;;for save and restore, use temporary variables as stack
-(define max-stack-number -1)
-(define stack-number -1)
-(define (get-stackvar)
-  (string->symbol (string-append "stackvar" (string stack-number))))
-
 (define (ccompile-save exp)
-  (set! stack-number (+ stack-number 1))
-  (let ((stackvar (get-stackvar)))
-    (string-append
-     (if (> stack-number max-stack-number)
-         (begin
-           (set! max-stack-number stack-number)
-           (statement "Object " (symbol->string stackvar)))
-         "")
-     (ccompile `(assign ,stackvar (reg ,(save-arg exp)))))))
+  (ccompile `(perform (op save) (reg ,(save-arg exp)))))
 
 (define (ccompile-restore exp)
-  (let ((stackvar (get-stackvar)))
-    (set! stack-number (- stack-number 1))
-    (ccompile `(assign ,(save-arg exp) (reg ,stackvar)))))
+  (ccompile `(assign ,(restore-arg exp) (op restore))))
 
 (define (ccompile-perform exp)
   (statement (ccompile-args (perform-args exp))))
@@ -86,10 +71,15 @@
 (define (ccompile-op args)
   (string-append (arg-val (car args))
                  "("
-                 (ccompile-arg (cadr args))
-                 (string-append* (map (lambda (arg)
-                                        (string-append ", " (ccompile-arg arg)))
-                                      (cddr args)))
+                 (if (null? (cdr args))
+                     ""
+                     (string-append
+                      (ccompile-arg (cadr args))
+                      (if (null? (cddr args))
+                          ""
+                          (string-append* (map (lambda (arg)
+                                                 (string-append ", " (ccompile-arg arg)))
+                                               (cddr args))))))
                  ")"))
 
 (define (ccompile-arg arg)
@@ -103,8 +93,10 @@
   ;;TODO: symbol, number, cons, string, vector
   "generic-const")
 
-
-;;change - to _
 ;;TODO
-(define (sanitize ir)
-  ir)
+;;change - to _
+;;probably need to fix procedure names, ? !
+;;? -> p
+;;remove !
+(define (sanitize string)
+  string)
