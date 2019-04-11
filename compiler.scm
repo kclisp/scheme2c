@@ -2,10 +2,17 @@
 (load "syntax.scm")
 
 (define (compile-to-c exp)
-  (ccompile-sequence (caddr (compile exp 'val 'next))))
+  (ccompile-sequence (sanitize (caddr (compile exp 'val 'next)))))
 
 (define (ccompile-sequence seq)
   (string-append* (map ccompile seq)))
+
+(define (line . args)
+  (string-append* (append args (list "\n"))))
+(define (statement . args)
+  (string-append* (append args (list ";\n"))))
+
+;;;Ccompile
 
 ;;takes IR expression, returns a string
 (define (ccompile exp)
@@ -17,27 +24,51 @@
    ((branch? exp) (ccompile-branch exp))
    ((save? exp) (ccompile-save exp))
    ((restore? exp) (ccompile-restore exp))
+   ((perform? exp) (ccompile-perform exp))
    (else (error "Unknown expression -- CCOMPILE" exp))))
 
 (define (ccompile-label exp)
-  (string-append (label-value exp) ":"))
+  (line (label-value exp) ":"))
 
 (define (ccompile-goto exp)
-  (string-append "goto " (ccompile-dest (goto-dest exp)) ";"))
+  (statement "goto " (ccompile-dest (goto-dest exp))))
 
 (define (ccompile-assign exp)
-  (string-append (assign-dest exp)
-                 " = "
-                 (ccompile-args (assign-args exp))
-                 ";"))
+  (statement (assign-dest exp)
+             " = "
+             (ccompile-args (assign-args exp))))
 
 (define (ccompile-test exp)
   (ccompile `(assign flag ,@(cdr exp))))
 
 (define (ccompile-branch exp)
-  (string-append "if (flag) {" (ccompile-goto `(goto ,@(cdr exp))) "}"))
+  (line "if (flag) {\n" (ccompile-goto `(goto ,@(cdr exp))) "}"))
 
-;;for save and restore, use temporary variables (as stack...)
+;;for save and restore, use temporary variables as stack
+(define max-stack-number -1)
+(define stack-number -1)
+(define (get-stackvar)
+  (string->symbol (string-append "stackvar" (string stack-number))))
+
+(define (ccompile-save exp)
+  (set! stack-number (+ stack-number 1))
+  (let ((stackvar (get-stackvar)))
+    (string-append
+     (if (> stack-number max-stack-number)
+         (begin
+           (set! max-stack-number stack-number)
+           (statement "Object " (symbol->string stackvar)))
+         "")
+     (ccompile `(assign ,stackvar (reg ,(save-arg exp)))))))
+
+(define (ccompile-restore exp)
+  (let ((stackvar (get-stackvar)))
+    (set! stack-number (- stack-number 1))
+    (ccompile `(assign ,(save-arg exp) (reg ,stackvar)))))
+
+(define (ccompile-perform exp)
+  (statement (ccompile-args (perform-args exp))))
+;;Details
 
 (define (ccompile-dest dest)
   (case (arg-type dest)
@@ -48,7 +79,7 @@
 (define (ccompile-args args)
   (let ((first-arg (car args)))
     (case (arg-type first-arg)
-      ((const label) (ccompile-arg first-arg))
+      ((const label reg) (ccompile-arg first-arg)) ;reg probably
       ((op) (ccompile-op args))
       (else (error "Unknown arg-type -- CCOMPILE-ARGS" args)))))
 
@@ -71,3 +102,9 @@
 (define (ccompile-const const)
   ;;TODO: symbol, number, cons, string, vector
   "generic-const")
+
+
+;;change - to _
+;;TODO
+(define (sanitize ir)
+  ir)

@@ -29,9 +29,12 @@ void test_types() {
   printf("label1: %p\n", &&label1);
 
   char *ptr = &&label1;
-  if (obj == 0.5) {
-    obj = 0;
+  if (obj >= 0.5) {
+    obj -= 0.4;
     goto *ptr;
+  } else if (obj >= 0.0) {
+    obj -= 0.4;
+    goto label1;
   }
 }
 
