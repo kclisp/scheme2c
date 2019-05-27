@@ -1,45 +1,69 @@
 #include <stdio.h>
+#include <stdint.h>
 
-typedef double Object;
+union Object {
+  uint64_t u;
+  double d;
+};
+
+typedef union Object Object;
 
 //type tests
-#define exp_ones ((long)0x7FF << 52)
+//components
+#define exp_ones ((uint64_t)0x7FF << 52)
+#define int_tag ((uint64_t)1<<51)
 
-long exponent_only(Object obj) {
-  return (long)obj & exp_ones;
+long exponent(Object obj) {
+  return obj.u & exp_ones;
 }
 
 long tag(Object obj) {
-
+  
 }
 
+//casts
+Object integer_to_obj(uint64_t num) {
+  return (Object)(num + exp_ones + int_tag);
+}
+
+//predicates
 int float_typep(Object obj) {
-  return exponent_only(obj) != exp_ones;
+  return exponent(obj) != exp_ones;
 }
-
 int int_typep(Object obj) {
-  //return !float_typep(obj) && 
+  return !float_typep(obj);
 }
 
 void test_types() {
-  Object obj = 0.5;
+  Object obj = {.d = 0.5};
   
  label_1:
-  printf("%lf: float? %d address %p\n", obj, float_typep(obj), &obj);
+  printf("%f: float? %d address %p long %lx\n", obj.d, float_typep(obj), &obj, obj.u);
   printf("label_1: %p\n", &&label_1);
 
   char *ptr = &&label_1;
-  if (obj >= 0.5) {
-    obj -= 0.4;
+  if (obj.d >= 0.5) {
+    obj.d -= 0.4;
     goto *ptr;
-  } else if (obj >= 0.0) {
-    obj -= 0.4;
+  } else if (obj.d >= 0.0) {
+    obj.d -= 0.4;
     goto label_1;
   }
+  printf("string: %p\n", "hi");
 }
 
 int main() {
   test_types();
-  
+  printf("exp_ones: %ld\n", exp_ones);
+  Object temp = {.u = exp_ones};
+  printf("infinity: %f\n", temp.d);
+  temp.u++;
+  printf("nan: %f\n", temp.d);
+
+  temp.u--;
+  temp.u += (long)1<<63;
+  printf("-infinity: %f\n", temp.d);
+  temp.u++;
+  printf("-nan: %f\n", temp.d);
   return 0;
 }

@@ -40,3 +40,7 @@ tags: 00 cons
       01 symbol
       10 string
       11 vector
+
+if sign bit is available:
+for integers, use as sign
+for pointers, use if inline (not a pointer; data is stored directly)
