@@ -8,6 +8,9 @@ Object new_cons() {
   return (Object)(free_index++ + exp_ones + cons_tag);
 }
 
+//nil has the last possible index
+Object nil = (Object)((tag_start - 1) + exp_ones + cons_tag);
+
 Object cons(Object a, Object b) {
   the_cars[free_index] = a;
   the_cdrs[free_index] = b;

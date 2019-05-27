@@ -8,6 +8,8 @@ Object the_cars[MAX_CONS];
 Object the_cdrs[MAX_CONS];
 extern uint64_t free_index;
 
+extern Object nil;
+
 Object new_cons();
 Object cons(Object, Object);
 

@@ -220,7 +220,7 @@
                (append-instruction-sequences
                 (car operand-codes)
                 (make-instruction-sequence '(val) '(argl)
-                 '((assign argl (op list) (reg val)))))))
+                 '((assign argl (op cons) (reg val) (const ())))))))
           (if (null? (cdr operand-codes))
               code-to-get-last-arg
               (preserving '(env)

@@ -50,3 +50,7 @@ for pointers, use if inline (not a pointer; data is stored directly)
 MODIFICATIONS TO SICP-COMPILER
 - added let
 - add new register ENTRY for going to compiled procedure entry (simpler than using val as the reigster for that)
+- argl uses cons(val, nil) instead of list(val) for the first cons.
+
+TODO:
+- keep if expressions in sicp-compiler -- c can handle if expressions (no test branch)

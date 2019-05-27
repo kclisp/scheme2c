@@ -30,7 +30,7 @@
   (ccompile `(assign flag ,@(cdr exp))))
 
 (define (ccompile-branch exp)
-  (line "if (flag) {\n" (ccompile-goto `(goto ,@(cdr exp))) "}"))
+  (string-append "if (flag) " (ccompile-goto `(goto ,@(cdr exp)))))
 
 ;;for save and restore, use temporary variables as stack
 (define (ccompile-save exp)
