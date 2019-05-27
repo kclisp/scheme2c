@@ -1,6 +1,3 @@
-(load "sicp-compiler/compiler.scm")
-(load "syntax.scm")
-
 (define (compile-to-c exp)
   (sanitize (ccompile-sequence (caddr (compile exp 'val 'next)))))
 
@@ -90,13 +87,15 @@
     (else (error "Unknown arg-type -- CCOMPILE-ARG" arg))))
 
 (define (ccompile-const const)
-  ;;TODO: symbol, number, cons, string, vector
+  ;;TODO: symbol, number, cons, string, vector follow Nan tagging
   "generic-const")
 
-;;TODO
-;;change - to _
-;;probably need to fix procedure names, ? !
-;;? -> p
-;;remove !
 (define (sanitize string)
-  string)
+  (string-map sanitize-char string))
+
+(define (sanitize-char char)
+  (case char
+    ((#\-) #\_)
+    ((#\?) #\p)
+    ((#\!) #\m)
+    (else char)))

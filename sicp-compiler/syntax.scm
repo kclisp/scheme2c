@@ -118,3 +118,12 @@
                      (sequence->exp (cond-actions first))
                      (expand-clauses rest))))))
 ;; end of Cond support
+
+(define (let? exp) (tagged-list? exp 'let))
+(define (let-bindings exp) (cadr exp))
+(define (let-body exp) (cddr exp))
+
+(define (let->lambda exp)
+  (let ((bindings (let-bindings exp)))
+    (cons (make-lambda (map car bindings) (let-body exp))
+          (map cadr bindings))))
