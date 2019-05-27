@@ -271,34 +271,29 @@
 ;;;applying compiled procedures
 
 (define (compile-proc-appl target linkage)
-  (cond ((and (eq? target 'val) (not (eq? linkage 'return)))
-         (make-instruction-sequence '(proc) all-regs
-           `((assign continue (label ,linkage))
-             (assign val (op compiled-procedure-entry)
-                         (reg proc))
-             (goto (reg val)))))
-        ((and (not (eq? target 'val))
-              (not (eq? linkage 'return)))
-         (let ((proc-return (make-label 'proc-return)))
-           (make-instruction-sequence '(proc) all-regs
-            `((assign continue (label ,proc-return))
-              (assign val (op compiled-procedure-entry)
-                          (reg proc))
-              (goto (reg val))
-              ,proc-return
-              (assign ,target (reg val))
-              (goto (label ,linkage))))))
-        ((and (eq? target 'val) (eq? linkage 'return))
-         (make-instruction-sequence '(proc continue) all-regs
-          '((assign val (op compiled-procedure-entry)
-                        (reg proc))
-            (goto (reg val)))))
-        ((and (not (eq? target 'val)) (eq? linkage 'return))
-         (error "return linkage, target not val -- COMPILE"
-                target))))
+  (if (and (not (eq? target 'val)) (eq? linkage 'return))
+      (error "return linkage, target not val -- COMPILE"
+             target)
+      (let ((base '((assign entry (op compiled-procedure-entry)
+                                  (reg proc))
+                    (goto (reg entry)))))
+        (cond ((and (eq? target 'val) (not (eq? linkage 'return)))
+               (make-instruction-sequence '(proc) all-regs
+                 `((assign continue (label ,linkage))
+                   ,@base)))
+              ((and (not (eq? target 'val)) (not (eq? linkage 'return)))
+               (let ((proc-return (make-label 'proc-return)))
+                 (make-instruction-sequence '(proc) all-regs
+                   `((assign continue (label ,proc-return))
+                     ,@base
+                     ,proc-return
+                     (assign ,target (reg val))
+                     (goto (label ,linkage))))))
+              ((and (eq? target 'val) (eq? linkage 'return))
+               (make-instruction-sequence '(proc continue) all-regs base))))))
 
 ;; footnote
-(define all-regs '(env proc val argl continue))
+(define all-regs '(env proc val argl continue entry))
 
 
 ;;;SECTION 5.5.4

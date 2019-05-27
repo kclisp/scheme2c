@@ -44,3 +44,7 @@ tags: 00 cons
 if sign bit is available:
 for integers, use as sign
 for pointers, use if inline (not a pointer; data is stored directly)
+
+MODIFICATIONS TO SICP-COMPILER
+- added let
+- add new register ENTRY for going to compiled procedure entry (simpler than using val as the reigster for that)

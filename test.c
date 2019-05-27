@@ -73,7 +73,15 @@ void test_types() {
   print_obj(obj);
 }
 
+//base functions
+
+
 int main() {
   test_types();
+
+  int flag;
+  char* continue, entry;
+  Object val, argl, proc, env;
+  
   return 0;
 }
