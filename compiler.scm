@@ -95,14 +95,14 @@
    ((vector? const) (ccompile-vector const))
    (else (error "Unknown type -- CCOMPILE-CONST" const))))
 
-(define (ccompile-symbol symbol)
-  "generic-const")
 (define (ccompile-number number)
   (cond
-   ((integer? number) (format #f "integer_to_obj((uint64_t)~a)" number))
-   ((real? number) (format #f "double_to_obj((double)~a)" (inexact number)))
+   ((integer? number) (format #f "integer_to_obj(~a)" number))
+   ((real? number) (format #f "double_to_obj(~a)" (inexact number)))
    (else (error "Unknown type -- CCOMPILE-NUMBER" number))))
 (define (ccompile-cons pair)
+  "generic-const")
+(define (ccompile-symbol symbol)
   "generic-const")
 (define (ccompile-string string)
   "generic-const")
