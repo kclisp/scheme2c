@@ -41,6 +41,8 @@ tags: 00 cons
       10 string
       11 vector
 
+pointers are displacements from a base pointer.
+
 if sign bit is available:
 for integers, use as sign
 for pointers, use if inline (not a pointer; data is stored directly)

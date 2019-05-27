@@ -85,7 +85,7 @@
    ((string? const) (ccompile-string const))
    ((vector? const) (ccompile-vector const))
    (else (error "Unknown type -- CCOMPILE-CONST" const))))
-
+;; should be done statically at compile time...
 (define (ccompile-number number)
   (cond
    ((integer? number) (format #f "integer_to_obj(~a)" number))
@@ -94,9 +94,8 @@
 (define (ccompile-cons pair)
   "generic-const")
 (define (ccompile-symbol symbol)
-  "generic-const")
+  (format #f "symbol_to_obj(~s)" (string-downcase (string symbol))))
 (define (ccompile-string string)
-  "generic-const")
+  (format #f "string_to_obj(~s)" string))
 (define (ccompile-vector vector)
   "generic-const")
-
