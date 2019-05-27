@@ -87,11 +87,10 @@
     (else (error "Unknown arg-type -- CCOMPILE-ARG" arg))))
 
 (define (ccompile-const const)
-  ;;TODO: symbol, number, cons, string, vector follow Nan tagging
   (cond
-   ((symbol? const) (ccompile-symbol const))
    ((number? const) (ccompile-number const))
    ((pair? const) (ccompile-cons const))
+   ((symbol? const) (ccompile-symbol const))
    ((string? const) (ccompile-string const))
    ((vector? const) (ccompile-vector const))
    (else (error "Unknown type -- CCOMPILE-CONST" const))))
@@ -101,7 +100,7 @@
 (define (ccompile-number number)
   (cond
    ((integer? number) (format #f "integer_to_obj((uint64_t)~a)" number))
-   ((real? number) "generic-const")
+   ((real? number) (format #f "double_to_obj((double)~a)" (inexact number)))
    (else (error "Unknown type -- CCOMPILE-NUMBER" number))))
 (define (ccompile-cons pair)
   "generic-const")

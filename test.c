@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+//Object definition
 union Object {
   uint64_t u;
   double d;
@@ -8,18 +9,15 @@ union Object {
 
 typedef union Object Object;
 
-//type tests
-//components
+//nan tag components
 #define exp_ones ((uint64_t)0x7FF << 52)
 #define int_tag ((uint64_t)1<<51)
-
-long exponent(Object obj) {
-  return obj.u & exp_ones;
-}
-
-long tag(Object obj) {
-  
-}
+#define pointer_tag(x) ((uint64_t)x<<49)
+#define pointer_mask pointer_tag(11)
+#define cons_tag pointer_tag(00)
+#define symbol_tag pointer_tag(01)
+#define string_tag pointer_tag(10)
+#define vector_tag pointer_tag(11)
 
 //casts
 Object integer_to_obj(uint64_t num) {
@@ -27,15 +25,38 @@ Object integer_to_obj(uint64_t num) {
 }
 
 //predicates
-int float_typep(Object obj) {
-  return exponent(obj) != exp_ones;
-}
-int int_typep(Object obj) {
-  return !float_typep(obj);
+int has_flag(Object obj, long mask, long flag) {
+  return (obj.u & mask) == flag;
 }
 
+int float_typep(Object obj) {
+  return !has_flag(obj, exp_ones, exp_ones);
+}
+int int_typep(Object obj) {
+  return !float_typep(obj) && has_flag(obj, int_tag, int_tag);
+}
+int pointer_typep(Object obj) {
+  return !float_typep(obj) && !int_typep(obj);
+}
+int pointer_has_flag(Object obj, long flag) {
+  return pointer_typep(obj) && has_flag(obj, pointer_mask, flag);
+}
+int cons_typep(Object obj) {
+  return pointer_has_flag(obj, cons_tag);
+}
+int symbol_typep(Object obj) {
+  return pointer_has_flag(obj, symbol_tag);
+}
+int string_typep(Object obj) {
+  return pointer_has_flag(obj, string_tag);
+}
+int vector_typep(Object obj) {
+  return pointer_has_flag(obj, vector_tag);
+}
+
+//type tests
 void test_types() {
-  Object obj = {.d = 0.5};
+  Object obj = {.d = .5};
   
  label_1:
   printf("%f: float? %d address %p long %lx\n", obj.d, float_typep(obj), &obj, obj.u);
@@ -49,7 +70,6 @@ void test_types() {
     obj.d -= 0.4;
     goto label_1;
   }
-  printf("string: %p\n", "hi");
 }
 
 int main() {
@@ -61,7 +81,7 @@ int main() {
   printf("nan: %f\n", temp.d);
 
   temp.u--;
-  temp.u += (long)1<<63;
+  temp.u += (uint64_t)1<<63;
   printf("-infinity: %f\n", temp.d);
   temp.u++;
   printf("-nan: %f\n", temp.d);
