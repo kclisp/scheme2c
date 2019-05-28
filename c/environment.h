@@ -10,6 +10,7 @@ typedef Object Env;             /* an env is a cons of frame and next env */
 Binding env_get_binding(Object, Env);
 Object lookup_variable_value(Object, Env);
 
+void define_variablem(Object, Object, Env);
 Env top_level_env();
 
 #endif

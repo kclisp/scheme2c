@@ -7,9 +7,7 @@
 //equality
 int eqp(Object, Object);
 
-//procedures
-int primitive_procedurep(Object);
-Object apply_primitive_procedure(Object, Object);
-char *compiled_procedure_entry (Object);
+//arithemtic
+Object add(Object);
 
 #endif

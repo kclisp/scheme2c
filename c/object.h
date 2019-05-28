@@ -46,4 +46,6 @@ Object address_to_obj(char *);
 //clear tags (not useful for float and int)
 uint64_t obj_clear(Object);
 
+void print_obj(Object obj);
+
 #endif

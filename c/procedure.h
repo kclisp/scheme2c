@@ -6,7 +6,7 @@
 
 //procedures
 //primitive procedure is just the function pointer
-Object make_primitive_procedure(char *entry);
+Object make_primitive_procedure(void *entry);
 int primitive_procedurep(Object proc);
 Object apply_primitive_procedure(Object proc, Object argl);
 

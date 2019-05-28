@@ -4,7 +4,7 @@
 //procedures
 //primitive procedure is just the function pointer
 
-Object make_primitive_procedure(char *entry) {
+Object make_primitive_procedure(void *entry) {
   return (Object)((uint64_t)entry + exp_ones + pproc_tag);
 }
 int primitive_procedurep(Object proc) {

@@ -33,6 +33,12 @@ Object cdr(Object cons) {
   return the_cdrs[cons_index(cons)];
 }
 
+void set_carm(Object cons, Object val) {
+  the_cars[cons_index(cons)] = val;
+}
+void set_cdrm(Object cons, Object val) {
+  the_cdrs[cons_index(cons)] = val;
+}
 
 int nullp(Object a) {
   return eqp(a, nil);

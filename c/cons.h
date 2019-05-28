@@ -15,6 +15,9 @@ Object cons(Object, Object);
 Object car(Object);
 Object cdr(Object);
 
+void set_carm(Object, Object);
+void set_cdrm(Object, Object);
+
 int nullp(Object);
 int pairp(Object);
 

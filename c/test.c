@@ -6,12 +6,6 @@
 #include "library.h"
 
 //type tests
-void print_obj(Object obj) {
-  printf("l: %lx d: %f      \tf? %d i? %d c? %d sy? %d st? %d v? %d\n",
-         obj.u, obj.d, float_typep(obj), int_typep(obj),
-         cons_typep(obj), symbol_typep(obj), string_typep(obj), vector_typep(obj));
-}
-
 void test_object() {
   printf("test_types\n");
   print_obj((Object){.d = .5});
