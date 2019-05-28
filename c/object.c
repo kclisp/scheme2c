@@ -38,6 +38,9 @@ int cproc_typep(Object obj) {
 int adr_typep(Object obj) {
   return tag_has_flag(obj, adr_tag);
 }
+int bool_typep(Object obj) {
+  return tag_has_flag(obj, bool_tag);
+}
 
 //casts
 Object int_to_obj(int64_t num) {
@@ -50,10 +53,6 @@ Object dbl_to_obj(double num) {
 Object str_to_obj(char *str) {
   return (Object)((uint64_t)str | exp_ones | str_tag);
 }    
-//need to check the obarray...
-Object sym_to_obj(char *str) {
-  return (Object)((uint64_t)str | exp_ones | sym_tag);
-}
 Object adr_to_obj(char *address) {
   return (Object)((uint64_t)address | exp_ones | adr_tag);
 }
@@ -67,7 +66,8 @@ uint64_t obj_clear(Object obj) {
 }
 
 void print_obj(Object obj) {
-  printf("l: %lx d: %f      \tf? %d i? %d c? %d sy? %d st? %d v? %d\n",
+  printf("l: %lx d: %f      \tf? %d i? %d c? %d sy? %d st? %d v? %d pp? %d cp? %d ad? %d b? %d\n",
          obj.u, obj.d, dbl_typep(obj), int_typep(obj),
-         cons_typep(obj), sym_typep(obj), str_typep(obj), vector_typep(obj));
+         cons_typep(obj), sym_typep(obj), str_typep(obj), vector_typep(obj),
+         pproc_typep(obj), cproc_typep(obj), adr_typep(obj), bool_typep(obj));
 }

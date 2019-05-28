@@ -3,6 +3,7 @@
 #include "cons.h"
 #include "environment.h"
 #include "library.h"
+#include "symbol.h"
 
 //type tests
 void test_object() {
@@ -20,6 +21,10 @@ void test_object() {
   print_obj(str_to_obj("hello, world!"));
   print_obj(str_to_obj(hi)); /* should be different */
   //vector
+  //pproc
+  //cproc
+  //adr
+  //bool
 }
 void test_cons() {
   printf("test_cons\n");
@@ -46,6 +51,14 @@ void test_env() {
   print_obj(env_get_binding(int_to_obj(2), e));
   print_obj(lookup_variable_value(x, e));
   print_obj(lookup_variable_value(y, e));
+
+  Object z = sym_to_obj("z");
+  /* define_variablem(z, dbl_to_obj(3.45), e); */
+  /* print_obj(env_get_binding(z, e)); */
+  /* print_obj(lookup_variable_value(z, e)); */
+}
+void test_proc() {
+  printf("test_proc\n");
 }
 void test_lib() {
   printf("test_lib\n");
@@ -57,6 +70,7 @@ void test() {
   test_object();
   test_cons();
   test_env();
+  test_proc();
   test_lib();
 }
 
@@ -67,6 +81,8 @@ int main() {
   char *cont, *entry;
   Object val, argl, proc;
   Env env = top_level_env();
+
+  /* print_obj(lookup_variable_value(sym_to_obj("+"), env)); */
   
   return 0;
 }

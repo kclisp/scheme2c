@@ -8,7 +8,8 @@ Object the_cars[MAX_CONS];
 Object the_cdrs[MAX_CONS];
 extern uint64_t free_index;
 
-extern Object nil;
+//nil has the last possible index
+#define nil ((Object)((tag_start - 1) + exp_ones + cons_tag))
 
 Object cons(Object, Object);
 

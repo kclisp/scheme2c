@@ -46,13 +46,17 @@ tags: 000 cons
       100 primitive procedure
       101 compound procedure
       110 address
-         
+      111 boolean  -- wasteful... have boolean be part of address?
+
 virtual address space currently has 48 bit pointers -- enough to fit
 
 TODO:
 if sign bit is available:
 for integers, use as sign -- done
 for pointers, use if inline (not a pointer; data is stored directly) (for symbol, string, vector)
+
+Internally, use ints as boolean values.
+For the actual code, functions will get wrapped to produce Object values.
 
 MODIFICATIONS TO SICP-COMPILER
 - added let

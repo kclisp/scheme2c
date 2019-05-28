@@ -11,7 +11,7 @@ int main() {
   Object val, argl, proc;
   Env env = top_level_env();
 
-  proc = lookup_variable_value(sym_to_obj("+"), env);
+proc = lookup_variable_value(sym_to_obj("+"), env);
 val = int_to_obj(2);
 argl = cons(val, nil);
 val = int_to_obj(1);
@@ -26,6 +26,5 @@ primitive_branch3:
 val = apply_primitive_procedure(proc, argl);
 after_call1:
 
-  
   return 0;
 }

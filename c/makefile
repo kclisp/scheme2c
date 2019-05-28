@@ -1,9 +1,9 @@
 CC=gcc
 CFLAGS=-I.
-DEPS = object.h cons.h environment.h procedure.h library.h
-OBJ = object.o cons.o environment.o procedure.o library.o
+DEPS = object.h cons.h environment.h procedure.h library.h symbol.h boolean.h
+OBJ = object.o cons.o environment.o procedure.o library.o symbol.o boolean.c
 
-a.out: test.o $(OBJ)
+test.out: test.o $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 # producing from template

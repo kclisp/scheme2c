@@ -24,6 +24,7 @@ typedef union Object Object;
 #define pproc_tag    tag(0b0100)
 #define cproc_tag    tag(0b0101)
 #define adr_tag      tag(0b0110)
+#define bool_tag     tag(0b0111)
 
 //predicates
 int dbl_typep(Object);
@@ -35,12 +36,13 @@ int vector_typep(Object);
 int pproc_typep(Object);
 int cproc_typep(Object);
 int adr_typep(Object);
+int bool_typep(Object);
 
 //casts
 Object int_to_obj(int64_t);
 Object dbl_to_obj(double);
 Object str_to_obj(char *);
-Object sym_to_obj(char *);
+/* Object sym_to_obj(char *); in symbol.h*/
 Object adr_to_obj(char *);
 
 int64_t obj_to_int(Object);

@@ -11,7 +11,6 @@ int main() {
   Object val, argl, proc;
   Env env = top_level_env();
 
-  //CODE
-  
+//CODE
   return 0;
 }
