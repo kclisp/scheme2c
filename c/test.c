@@ -4,6 +4,7 @@
 #include "environment.h"
 #include "library.h"
 #include "symbol.h"
+#include "boolean.h"
 
 //type tests
 void test_object() {
@@ -24,7 +25,8 @@ void test_object() {
   //pproc
   //cproc
   //adr
-  //bool
+  print_obj(true);
+  print_obj(false);
 }
 void test_cons() {
   printf("test_cons\n");
@@ -53,9 +55,9 @@ void test_env() {
   print_obj(lookup_variable_value(y, e));
 
   Object z = sym_to_obj("z");
-  /* define_variablem(z, dbl_to_obj(3.45), e); */
-  /* print_obj(env_get_binding(z, e)); */
-  /* print_obj(lookup_variable_value(z, e)); */
+  define_variablem(z, dbl_to_obj(3.45), e);
+  print_obj(env_get_binding(z, e));
+  print_obj(lookup_variable_value(z, e));
 }
 void test_proc() {
   printf("test_proc\n");
@@ -82,7 +84,5 @@ int main() {
   Object val, argl, proc;
   Env env = top_level_env();
 
-  /* print_obj(lookup_variable_value(sym_to_obj("+"), env)); */
-  
   return 0;
 }

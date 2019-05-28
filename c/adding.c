@@ -4,6 +4,8 @@
 #include "environment.h"
 #include "library.h"
 #include "procedure.h"
+#include "symbol.h"
+#include "boolean.h"
 
 int main() {
   int flag;
@@ -26,5 +28,5 @@ primitive_branch3:
 val = apply_primitive_procedure(proc, argl);
 after_call1:
 
-  return 0;
+  return val.u;
 }

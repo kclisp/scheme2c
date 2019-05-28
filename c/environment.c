@@ -18,15 +18,7 @@ static Binding frame_get_binding(Object var, Frame frame) {
       return b;
     frame = cdr(frame);
   }
-}
-
-static void add_binding_to_framem(Object var, Object val, Frame frame) {
-  if (nullp(car(frame)))
-    set_carm(frame, cons(var, val));
-  else {
-    set_cdrm(frame, cons(car(frame), cdr(frame)));
-    set_carm(frame, cons(var, val));
-  }
+  return false;
 }
 
 //returns false on failure
@@ -53,12 +45,12 @@ void define_variablem(Object var, Object val, Env env) {
   if (truep(b))
     set_cdrm(b, val);
   else
-    add_binding_to_framem(var, val, car(env));
+    set_carm(env, cons(cons(var, val), car(env)));
 }
 
 //put all primitives
 Env top_level_env() {
-  Env env = cons(cons(nil, nil), nil);
+  Env env = cons(nil, nil);
   define_variablem(sym_to_obj("+"), make_primitive_procedure(&add), env);
   return env;
 }

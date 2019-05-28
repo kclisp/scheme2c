@@ -4,6 +4,8 @@
 #include "environment.h"
 #include "library.h"
 #include "procedure.h"
+#include "symbol.h"
+#include "boolean.h"
 
 int main() {
   int flag;
@@ -12,5 +14,5 @@ int main() {
   Env env = top_level_env();
 
 //CODE
-  return 0;
+  return val.u;
 }
