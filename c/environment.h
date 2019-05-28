@@ -16,4 +16,6 @@ typedef struct Env Env;
 Binding env_get_binding(Object, Env);
 Object lookup_variable_value(Object, Env);
 
+Env top_level_env();
+
 #endif

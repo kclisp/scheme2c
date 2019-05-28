@@ -36,3 +36,8 @@ Object lookup_variable_value(Object var, Env env) {
   assert(pairp(b));
   return cdr(b);
 }
+
+//put all primitives
+Env top_level_env() {
+
+}

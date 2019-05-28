@@ -58,7 +58,7 @@ void test_lib() {
 }
 
 void test() {
-  test_object);
+  test_object();
   test_cons();
   test_env();
 }
@@ -68,7 +68,8 @@ int main() {
 
   int flag;
   char *cont, *entry;
-  Object val, argl, proc, env;
+  Object val, argl, proc;
+  Env env = top_level_env();
   
   return 0;
 }
