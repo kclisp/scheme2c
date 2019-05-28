@@ -13,5 +13,7 @@ test.out: test.o $(OBJ)
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
+.PHONY: clean
+
 clean:
 	rm -f *~ *.o *.out

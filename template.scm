@@ -3,11 +3,12 @@
 (define (read-file filename)
   (read-delimited-string (char-set) (open-input-file filename)))
 
-(define c-template (read-file template-c-file))
+(define (c-template)
+  (read-file template-c-file))
 
 ;;replace //CODE in template with string
 (define (template-replace str)
-  (find-and-replace c-template "//CODE" str))
+  (find-and-replace (c-template) "//CODE" str))
 
 ;; assume no overlaps
 (define (find-and-replace base replace with)
