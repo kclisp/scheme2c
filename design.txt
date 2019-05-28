@@ -41,7 +41,7 @@ tags: 00 cons
       10 string
       11 vector
 
-pointers are displacements from a base pointer.
+virtual address space currently has 48 bit pointers -- enough to fit
 
 if sign bit is available:
 for integers, use as sign

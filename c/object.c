@@ -1,5 +1,6 @@
 #include "object.h"
 #include <assert.h>
+#include <stdio.h>
 
 //predicates
 static int has_flag(Object obj, long mask, long flag) {
@@ -38,16 +39,10 @@ Object integer_to_obj(uint64_t num) {
 Object double_to_obj(double num) {
   return (Object){.d = num};
 }
-//cons pointer is an index
-//pointers are displacements from a base pointer
-//sanity check: the displacement should be less than the tags
 Object string_to_obj(char *str) {
-  /* printf("str: %p &etext: %p\n", str, &etext); */
-  assert((uint64_t)(str - &etext) < tag_start);
-  return (Object)((uint64_t)(str - &etext) + exp_ones + string_tag);
+  return (Object)((uint64_t)str + exp_ones + string_tag);
 }    
 //need to check the obarray...
 Object symbol_to_obj(char *str) {
-  assert((uint64_t)(str - &etext) < tag_start);
-  return (Object)((uint64_t)(str - &etext) + exp_ones + symbol_tag);
+  return (Object)((uint64_t)str + exp_ones + symbol_tag);
 }

@@ -3,9 +3,6 @@
 
 #include <stdint.h>
 
-//for pointers
-extern char etext; //end of text segment
-
 //Object definition
 union Object {
   uint64_t u;
@@ -39,5 +36,4 @@ Object integer_to_obj(uint64_t);
 Object double_to_obj(double);
 Object string_to_obj(char *);
 Object symbol_to_obj(char *);
-
 #endif

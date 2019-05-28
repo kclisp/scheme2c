@@ -10,7 +10,12 @@ extern uint64_t free_index;
 
 extern Object nil;
 
-Object new_cons();
 Object cons(Object, Object);
+
+Object car(Object);
+Object cdr(Object);
+
+int nullp(Object);
+int pairp(Object);
 
 #endif
