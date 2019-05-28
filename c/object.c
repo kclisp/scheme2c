@@ -13,23 +13,29 @@ int float_typep(Object obj) {
 int int_typep(Object obj) {
   return !float_typep(obj) && has_flag(obj, int_tag, int_tag);
 }
-int pointer_typep(Object obj) {
-  return !float_typep(obj) && !int_typep(obj);
-}
-static int pointer_has_flag(Object obj, long flag) {
-  return pointer_typep(obj) && has_flag(obj, pointer_mask, flag);
+static int tag_has_flag(Object obj, long flag) {
+  return !float_typep(obj) && has_flag(obj, pointer_mask, flag);
 }
 int cons_typep(Object obj) {
-  return pointer_has_flag(obj, cons_tag);
+  return tag_has_flag(obj, cons_tag);
 }
 int symbol_typep(Object obj) {
-  return pointer_has_flag(obj, symbol_tag);
+  return tag_has_flag(obj, symbol_tag);
 }
 int string_typep(Object obj) {
-  return pointer_has_flag(obj, string_tag);
+  return tag_has_flag(obj, string_tag);
 }
 int vector_typep(Object obj) {
-  return pointer_has_flag(obj, vector_tag);
+  return tag_has_flag(obj, vector_tag);
+}
+int pproc_typep(Object obj) {
+  return tag_has_flag(obj, pproc_tag);
+}
+int cproc_typep(Object obj) {
+  return tag_has_flag(obj, cproc_tag);
+}
+int address_typep(Object obj) {
+  return tag_has_flag(obj, address_tag);
 }
 
 //casts
@@ -45,4 +51,12 @@ Object string_to_obj(char *str) {
 //need to check the obarray...
 Object symbol_to_obj(char *str) {
   return (Object)((uint64_t)str + exp_ones + symbol_tag);
+}
+Object address_to_obj(char *address) {
+  return (Object)((uint64_t)address + exp_ones + address_tag);
+}
+
+//clear tags
+uint64_t obj_clear(Object obj) {
+  return obj.u & ~(exp_ones | pointer_mask);
 }

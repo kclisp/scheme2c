@@ -6,10 +6,9 @@
 #include "library.h"
 
 //type tests
-//address is useless right now since Object is passed by value
 void print_obj(Object obj) {
-  printf("a: %p l: %lx d: %f    \tf? %d i? %d p? %d c? %d sy? %d st? %d v? %d\n",
-         &obj, obj.u, obj.d, float_typep(obj), int_typep(obj), pointer_typep(obj),
+  printf("l: %lx d: %f      \tf? %d i? %d c? %d sy? %d st? %d v? %d\n",
+         obj.u, obj.d, float_typep(obj), int_typep(obj),
          cons_typep(obj), symbol_typep(obj), string_typep(obj), vector_typep(obj));
 }
 
@@ -47,7 +46,7 @@ void test_env() {
   Frame f = cons(b, nil);
   b = cons(y, integer_to_obj(40));
   f = cons(b, f);
-  Env e = {f, NULL};
+  Env e = cons(f, nil);
   print_obj(env_get_binding(x, e));
   print_obj(env_get_binding(integer_to_obj(2), e));
   print_obj(lookup_variable_value(x, e));

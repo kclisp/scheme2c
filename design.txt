@@ -32,20 +32,24 @@ integers (51 bits)
 exp: 1s
 F:1ii..i
 
-pointer (49 bits)
-?1...10ttpp..p
+pointer (48 bits)
+?1...10tttp..p
 exp:1s
-F:0ttpp..pp
-tags: 00 cons
-      01 symbol
-      10 string
-      11 vector
-
+F:0tttp..p
+tags: 000 cons
+      001 symbol
+      010 string
+      011 vector
+      100 primitive procedure
+      101 compound procedure
+      110 address
+         
 virtual address space currently has 48 bit pointers -- enough to fit
 
+TODO:
 if sign bit is available:
 for integers, use as sign
-for pointers, use if inline (not a pointer; data is stored directly)
+for pointers, use if inline (not a pointer; data is stored directly) (for symbol, string, vector)
 
 MODIFICATIONS TO SICP-COMPILER
 - added let

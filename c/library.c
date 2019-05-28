@@ -6,4 +6,3 @@
 int eqp(Object a, Object b) {
   return a.u == b.u;
 }
-

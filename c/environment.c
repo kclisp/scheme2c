@@ -19,15 +19,13 @@ static Binding frame_get_binding(Object var, Frame frame) {
 //returns nil on failure
 Binding env_get_binding(Object var, Env env) {
   Binding b;
-  while (1) {
-    b = frame_get_binding(var, env.frame);
+  while (pairp(env)) {
+    b = frame_get_binding(var, car(env));
     if (pairp(b))
       return b;
-    Env *next = env.next_env;
-    if (next == NULL)
-      return nil;
-    env = *next;
+    env = cdr(env);
   }
+  return nil;
 }
 
 //error if var is not in env

@@ -93,7 +93,7 @@
    ((real? number) (format #f "double_to_obj(~a)" (inexact number)))
    (else (error "Unknown type -- CCOMPILE-NUMBER" number))))
 (define (ccompile-cons pair)
-  (format #f "cons(~a,~a)" (ccompile-const (car pair)) (ccompile-const (cdr pair))))
+  (format #f "cons(~a, ~a)" (ccompile-const (car pair)) (ccompile-const (cdr pair))))
 (define (ccompile-symbol symbol)
   (format #f "symbol_to_obj(~s)" (string-downcase (string symbol))))
 (define (ccompile-string string)

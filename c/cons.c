@@ -20,7 +20,7 @@ Object cons(Object a, Object b) {
 
 static uint64_t cons_index(Object cons) {
   assert(cons_typep(cons));
-  return cons.u - exp_ones - cons_tag;
+  return obj_clear(cons);
 }
 
 Object car(Object cons) {
