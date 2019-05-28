@@ -57,6 +57,6 @@ void define_variablem(Object var, Object val, Env env) {
 //put all primitives
 Env top_level_env() {
   Env env = cons(cons(nil, nil), nil);
-  define_variablem(symbol_to_obj("+"), make_primitive_procedure(&add), env);
+  define_variablem(sym_to_obj("+"), make_primitive_procedure(&add), env);
   return env;
 }

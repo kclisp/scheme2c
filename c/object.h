@@ -18,34 +18,35 @@ typedef union Object Object;
 #define tag_start    tag(0b0001)
 #define int_tag      tag(0b1000)
 #define cons_tag     tag(0b0000)
-#define symbol_tag   tag(0b0001)
-#define string_tag   tag(0b0010)
+#define sym_tag      tag(0b0001)
+#define str_tag      tag(0b0010)
 #define vector_tag   tag(0b0011)
 #define pproc_tag    tag(0b0100)
 #define cproc_tag    tag(0b0101)
-#define address_tag  tag(0b0110)
+#define adr_tag      tag(0b0110)
 
 //predicates
-int float_typep(Object);
+int dbl_typep(Object);
 int int_typep(Object);
 int cons_typep(Object);
-int symbol_typep(Object);
-int string_typep(Object);
+int sym_typep(Object);
+int str_typep(Object);
 int vector_typep(Object);
 int pproc_typep(Object);
 int cproc_typep(Object);
-int address_typep(Object);
+int adr_typep(Object);
 
 //casts
-Object integer_to_obj(uint64_t);
-Object double_to_obj(double);
-Object string_to_obj(char *);
-Object symbol_to_obj(char *);
-Object address_to_obj(char *);
+Object int_to_obj(int64_t);
+Object dbl_to_obj(double);
+Object str_to_obj(char *);
+Object sym_to_obj(char *);
+Object adr_to_obj(char *);
 
+int64_t obj_to_int(Object);
 //clear tags (not useful for float and int)
 uint64_t obj_clear(Object);
 
-void print_obj(Object obj);
+void print_obj(Object);
 
 #endif

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "object.h"
 #include "cons.h"
 #include "environment.h"
 #include "library.h"
@@ -9,20 +8,22 @@
 void test_object() {
   printf("test_types\n");
   print_obj((Object){.d = .5});
-  print_obj(integer_to_obj(20));
-  print_obj(double_to_obj(3.1416));
-  print_obj(cons(integer_to_obj(2), nil)); /* note: inf, instead of nan. desirable? */
+  print_obj(dbl_to_obj(3.1416));
+  print_obj(int_to_obj(20));
+  print_obj(int_to_obj(-30));
+  /* print_obj(int_to_obj((int64_t)1<<52)); */ //correct; int too large
+  print_obj(cons(int_to_obj(2), nil)); /* note: inf, instead of nan. desirable? */
   print_obj(nil);
-  print_obj(symbol_to_obj("hi, friend"));
+  print_obj(sym_to_obj("hi, friend"));
   char hi[] = "hi, friend";
-  print_obj(symbol_to_obj(hi)); /* should be same */
-  print_obj(string_to_obj("hello, world!"));
-  print_obj(string_to_obj(hi)); /* should be different */
+  print_obj(sym_to_obj(hi)); /* should be same */
+  print_obj(str_to_obj("hello, world!"));
+  print_obj(str_to_obj(hi)); /* should be different */
   //vector
 }
 void test_cons() {
   printf("test_cons\n");
-  Object con = cons(cons(integer_to_obj(2), string_to_obj("hi")), nil);
+  Object con = cons(cons(int_to_obj(2), str_to_obj("hi")), nil);
   print_obj(con);
   print_obj(car(con));
   print_obj(cdr(con));
@@ -33,27 +34,30 @@ void test_cons() {
 }
 void test_env() {
   printf("test_env\n");
-  Object x = symbol_to_obj("x");
-  Object y = symbol_to_obj("y");
+  Object x = sym_to_obj("x");
+  Object y = sym_to_obj("y");
     
-  Binding b = cons(x, integer_to_obj(3));
+  Binding b = cons(x, int_to_obj(3));
   Frame f = cons(b, nil);
-  b = cons(y, integer_to_obj(40));
+  b = cons(y, int_to_obj(40));
   f = cons(b, f);
   Env e = cons(f, nil);
   print_obj(env_get_binding(x, e));
-  print_obj(env_get_binding(integer_to_obj(2), e));
+  print_obj(env_get_binding(int_to_obj(2), e));
   print_obj(lookup_variable_value(x, e));
   print_obj(lookup_variable_value(y, e));
 }
 void test_lib() {
-
+  printf("test_lib\n");
+  Object argl = cons(int_to_obj(20), cons(int_to_obj(57), nil));
+  print_obj(add(argl));
 }
 
 void test() {
   test_object();
   test_cons();
   test_env();
+  test_lib();
 }
 
 int main() {

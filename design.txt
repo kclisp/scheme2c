@@ -28,14 +28,17 @@ fff...ff
 (not (= F 0))
 
 integers (51 bits)
-?1..11ii..i
+s1..11ii..i
+s: s (sign bit for (signed) integer)
 exp: 1s
-F:1ii..i
+F: 1ii..i
+
 
 pointer (48 bits)
 ?1...10tttp..p
-exp:1s
-F:0tttp..p
+s: ? (unused currently)
+exp: 1s
+F: 0tttp..p
 tags: 000 cons
       001 symbol
       010 string
@@ -48,13 +51,14 @@ virtual address space currently has 48 bit pointers -- enough to fit
 
 TODO:
 if sign bit is available:
-for integers, use as sign
+for integers, use as sign -- done
 for pointers, use if inline (not a pointer; data is stored directly) (for symbol, string, vector)
 
 MODIFICATIONS TO SICP-COMPILER
 - added let
 - add new register ENTRY for going to compiled procedure entry (simpler than using val as the reigster for that)
 - argl uses cons(val, nil) instead of list(val) for the first cons.
+- replace CONTINUE register with CONT
 
 TODO:
 - keep if expressions in sicp-compiler -- c can handle if expressions (no test branch)

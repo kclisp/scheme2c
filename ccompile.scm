@@ -89,14 +89,14 @@
 ;; should be done statically at compile time...
 (define (ccompile-number number)
   (cond
-   ((integer? number) (format #f "integer_to_obj(~a)" number))
-   ((real? number) (format #f "double_to_obj(~a)" (inexact number)))
+   ((integer? number) (format #f "int_to_obj(~a)" number))
+   ((real? number) (format #f "dbl_to_obj(~a)" (inexact number)))
    (else (error "Unknown type -- CCOMPILE-NUMBER" number))))
 (define (ccompile-cons pair)
   (format #f "cons(~a, ~a)" (ccompile-const (car pair)) (ccompile-const (cdr pair))))
 (define (ccompile-symbol symbol)
-  (format #f "symbol_to_obj(~s)" (string-downcase (string symbol))))
+  (format #f "sym_to_obj(~s)" (string-downcase (string symbol))))
 (define (ccompile-string string)
-  (format #f "string_to_obj(~s)" string))
+  (format #f "str_to_obj(~s)" string))
 (define (ccompile-vector vector)
   "generic-const")

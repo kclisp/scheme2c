@@ -54,8 +54,8 @@
 
 (define (compile-linkage linkage)
   (cond ((eq? linkage 'return)
-         (make-instruction-sequence '(continue) '()
-          '((goto (reg continue)))))
+         (make-instruction-sequence '(cont) '()
+          '((goto (reg cont)))))
         ((eq? linkage 'next)
          (empty-instruction-sequence))
         (else
@@ -63,7 +63,7 @@
           `((goto (label ,linkage)))))))
 
 (define (end-with-linkage linkage instruction-sequence)
-  (preserving '(continue)
+  (preserving '(cont)
    instruction-sequence
    (compile-linkage linkage)))
 
@@ -144,7 +144,7 @@
               (if-consequent exp) target consequent-linkage))
             (a-code
              (compile (if-alternative exp) target linkage)))
-        (preserving '(env continue)
+        (preserving '(env cont)
          p-code
          (append-instruction-sequences
           (make-instruction-sequence '(val) '()
@@ -160,7 +160,7 @@
 (define (compile-sequence seq target linkage)
   (if (last-exp? seq)
       (compile (first-exp seq) target linkage)
-      (preserving '(env continue)
+      (preserving '(env cont)
        (compile (first-exp seq) target 'next)
        (compile-sequence (rest-exps seq) target linkage))))
 
@@ -205,9 +205,9 @@
         (operand-codes
          (map (lambda (operand) (compile operand 'val 'next))
               (operands exp))))
-    (preserving '(env continue)
+    (preserving '(env cont)
      proc-code
-     (preserving '(proc continue)
+     (preserving '(proc cont)
       (construct-arglist operand-codes)
       (compile-procedure-call target linkage)))))
 
@@ -279,21 +279,21 @@
                     (goto (reg entry)))))
         (cond ((and (eq? target 'val) (not (eq? linkage 'return)))
                (make-instruction-sequence '(proc) all-regs
-                 `((assign continue (label ,linkage))
+                 `((assign cont (label ,linkage))
                    ,@base)))
               ((and (not (eq? target 'val)) (not (eq? linkage 'return)))
                (let ((proc-return (make-label 'proc-return)))
                  (make-instruction-sequence '(proc) all-regs
-                   `((assign continue (label ,proc-return))
+                   `((assign cont (label ,proc-return))
                      ,@base
                      ,proc-return
                      (assign ,target (reg val))
                      (goto (label ,linkage))))))
               ((and (eq? target 'val) (eq? linkage 'return))
-               (make-instruction-sequence '(proc continue) all-regs base))))))
+               (make-instruction-sequence '(proc cont) all-regs base))))))
 
 ;; footnote
-(define all-regs '(env proc val argl continue entry))
+(define all-regs '(env proc val argl cont entry))
 
 
 ;;;SECTION 5.5.4

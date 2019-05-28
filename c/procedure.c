@@ -18,7 +18,7 @@ Object apply_primitive_procedure(Object proc, Object argl) {
 
 //compiled procedure is a cons of entry and env
 Object make_compiled_procedure(char *entry, Env env) {
-  return cons(address_to_obj(entry), env);
+  return cons(adr_to_obj(entry), env);
 }
 char *compiled_procedure_entry(Object proc) {
   return (char *)obj_clear(car(proc));

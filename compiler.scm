@@ -1,3 +1,10 @@
+(define (compile-to-file filename exp)
+  (with-output-to-file filename
+    (lambda ()
+      (display (template-replace (compile-to-c exp))))))
+
+;; (compile-to-file "c/adding.c" '(+ 1 2))
+
 (define (compile-to-c exp)
   (sanitize (ccompile-sequence (caddr (compile exp 'val 'next)))))
 
