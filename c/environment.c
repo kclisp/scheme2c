@@ -74,6 +74,14 @@ Env top_level_env() {
   define_primitive("+", add, env);
   define_primitive("-", subtract, env);
   define_primitive("*", multiply, env);
+  define_primitive("=", numequal, env);
+
+  //list
+  define_primitive("cons", consl, env);
+  define_primitive("car", carl, env);
+  define_primitive("cdr", cdrl, env);
+  define_primitive("null?", nullpl, env);
+  
   //output
   define_primitive("display", display, env);
   return env;

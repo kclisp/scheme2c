@@ -8,6 +8,7 @@
 
 //predicates
 //equality
+//addresses are exactly equal
 int eqp(Object a, Object b) {
   return a.u == b.u;
 }
@@ -37,6 +38,28 @@ Object multiply(Object argl) {
     argl = cdr(argl);
   }
   return int_to_obj(product);
+}
+
+Object numequal(Object argl) {
+  Object a = car(argl);
+  Object b = car(cdr(argl));
+  assert(int_typep(a));
+  assert(int_typep(b));
+  return bool_to_obj(eqp(a, b));
+}
+
+//list - wrappers
+Object consl(Object argl) {
+  return argl;
+}
+Object carl(Object argl) {
+  return car(car(argl));
+}
+Object cdrl(Object argl) {
+  return cdr(car(argl));
+}
+Object nullpl(Object argl) {
+  return bool_to_obj(nullp(car(argl)));
 }
 
 //output

@@ -11,6 +11,13 @@ int eqp(Object, Object);
 Object add(Object);
 Object subtract(Object);
 Object multiply(Object);
+Object numequal(Object);
+
+//list - wrappers
+Object consl(Object);
+Object carl(Object);
+Object cdrl(Object);
+Object nullpl(Object);
 
 //output
 Object display(Object);

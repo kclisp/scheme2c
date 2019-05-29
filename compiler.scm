@@ -4,6 +4,7 @@
       (display (template-replace (compile-to-c exp))))))
 
 (define (compile-to-c exp)
+  (set! label-counter 0)
   (sanitize (ccompile-sequence (caddr (compile exp 'val 'next)))))
 
 (define (line . args)

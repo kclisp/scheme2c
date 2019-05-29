@@ -43,18 +43,21 @@ int bool_typep(Object obj) {
 }
 
 //casts
+Object dbl_to_obj(double num) {
+  return (Object){.d = num};
+}
 Object int_to_obj(int64_t num) {
   assert(labs(num) < int_tag);
   return (Object)(num | exp_ones | int_tag);
-}
-Object dbl_to_obj(double num) {
-  return (Object){.d = num};
 }
 Object str_to_obj(char *str) {
   return (Object)((uint64_t)str | exp_ones | str_tag);
 }    
 Object adr_to_obj(void *address) {
   return (Object)((uint64_t)address | exp_ones | adr_tag);
+}
+Object bool_to_obj(int bool) {
+  return (Object)(bool | exp_ones | bool_tag);
 }
 
 int64_t obj_to_int(Object obj) {

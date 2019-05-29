@@ -41,11 +41,12 @@ int adr_typep(Object);
 int bool_typep(Object);
 
 //casts
-Object int_to_obj(int64_t);
 Object dbl_to_obj(double);
+Object int_to_obj(int64_t);
 Object str_to_obj(char *);
 /* Object sym_to_obj(char *); in symbol.h*/
 Object adr_to_obj(void *);
+Object bool_to_obj(int);
 
 int64_t obj_to_int(Object);
 //clear tags (not useful for float and int)

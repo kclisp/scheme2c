@@ -51,6 +51,7 @@
 ;; [kenny@dellArch example]$ ./fact1.out 
 ;; [kenny@dellArch example]$ echo $?
 ;; 9
+;;similarly, cons index
 
 (make-test 'fact2
            '(define (fact n)
@@ -58,10 +59,18 @@
                   1
                   (* n (fact (- n 1)))))
            '(display (fact 4)))
+;; [kenny@dellArch example]$ ./fact2.out 
+;; 24
 
 (make-test 'map1
            '(define (map1 f list)
               (if (null? list)
                   '()
-                  (let ((head (f (car list)))) ;force evaluation
-                    (cons head (map1 f (cdr list)))))))
+                  (let ((head (f (car list)))) ;force evaluation order
+                    (cons head (map1 f (cdr list))))))
+           '(map1 display '(1.3 2 hi "hello")))
+;; [kenny@dellArch example]$ ./map1.out 
+;; 1.300000
+;; 2
+;; hi
+;; hello
