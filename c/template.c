@@ -6,6 +6,7 @@
 #include "procedure.h"
 #include "symbol.h"
 #include "boolean.h"
+#include "stack.h"
 
 int main() {
   int flag;

@@ -36,8 +36,9 @@ static void print_cons(Object obj)  {
   while (pairp(obj)) {
     a = car(obj);
     displayi(a);
-    printf(" ");
     obj = cdr(obj);
+    if (pairp(obj))
+      printf(" ");
   }
   printf(")");
 }
@@ -60,7 +61,7 @@ static printer printers[] = {print_cons, print_sym, print_str, print_vec,
 //internal
 void displayi(Object obj) {
   if (dbl_typep(obj)) {
-    printf("%f", obj);
+    printf("%f", obj.d);
     return;
   }
   //jump table on tag

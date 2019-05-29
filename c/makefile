@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-I.
-DEPS = object.h cons.h environment.h procedure.h library.h symbol.h boolean.h
-OBJ = object.o cons.o environment.o procedure.o library.o symbol.o boolean.c
+DEPS = object.h cons.h environment.h procedure.h library.h symbol.h boolean.h stack.h
+OBJ = object.o cons.o environment.o procedure.o library.o symbol.o boolean.c stack.c
 
 test.out: test.o $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)

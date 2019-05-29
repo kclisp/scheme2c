@@ -6,6 +6,7 @@
 #include "symbol.h"
 #include "boolean.h"
 #include "procedure.h"
+#include "stack.h"
 
 //type tests
 void test_object() {
@@ -79,13 +80,17 @@ void test_lib() {
   Object argl = cons(int_to_obj(20), cons(int_to_obj(57), nil));
   print_obj(add(argl));
 }
+void test_stack() {
 
-void test() {
+}
+
+oid test() {
   test_object();
   test_cons();
   test_env();
   test_proc();
   test_lib();
+  test_stack();
 }
 
 int main() {
