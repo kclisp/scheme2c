@@ -21,6 +21,23 @@ Object add(Object argl) {
   }
   return int_to_obj(sum);
 }
+Object subtract(Object argl) {
+  if (nullp(argl))
+    return int_to_obj(0);
+  int64_t base = obj_to_int(car(argl));
+  argl = cdr(argl);
+  return int_to_obj(base - obj_to_int(add(argl)));
+}
+Object multiply(Object argl) {
+  if (nullp(argl))
+    return int_to_obj(1);
+  int64_t product = 1;
+  while (pairp(argl)) {
+    product *= obj_to_int(car(argl));
+    argl = cdr(argl);
+  }
+  return int_to_obj(product);
+}
 
 //output
 Object display(Object argl) {
@@ -47,7 +64,7 @@ static void print_pproc(Object obj) {
   printf("#[primitive procedure %p]", obj_clear(obj));
 }
 static void print_cproc(Object obj) {
-  printf("#[compiled procedure %p]", compiled_procedure_entry(obj));
+  printf("#[compiled procedure %p]", obj_clear(compiled_procedure_entry(obj)));
 }
 static void print_adr(Object obj)   {printf("%p", obj_clear(obj));}
 static void print_bool(Object obj)  {if (falsep(obj)) printf("#f"); else printf("#t");}

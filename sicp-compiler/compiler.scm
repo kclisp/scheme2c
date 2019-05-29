@@ -274,9 +274,9 @@
   (if (and (not (eq? target 'val)) (eq? linkage 'return))
       (error "return linkage, target not val -- COMPILE"
              target)
-      (let ((base '((assign entry (op compiled-procedure-entry)
+      (let ((base '((assign val (op compiled-procedure-entry)
                                   (reg proc))
-                    (goto (reg entry)))))
+                    (goto (reg val)))))
         (cond ((and (eq? target 'val) (not (eq? linkage 'return)))
                (make-instruction-sequence '(proc) all-regs
                  `((assign cont (label ,linkage))
@@ -293,7 +293,7 @@
                (make-instruction-sequence '(proc cont) all-regs base))))))
 
 ;; footnote
-(define all-regs '(env proc val argl cont entry))
+(define all-regs '(env proc val argl cont))
 
 
 ;;;SECTION 5.5.4

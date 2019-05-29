@@ -10,8 +10,12 @@ Benefits
   - able to do compiler optimizations
   - able to be extended to have low level operations
 
-Have the base library written in C
-Use SICP's compiler as an intermediate; compile the output to C
+Scheme code is passed to the SICP compiler, producing a simple register machine version.
+The intermediate representation is then compiled to C.
+The C code is wrapped around a minimal scheme library (in c).
+TODO: the rest of scheme can be implemented on top, in scheme.
+The final C code is then compiled into an executable.
+
 
 TYPES
 via Nan tagging:
@@ -60,7 +64,6 @@ For the actual (scheme) code, functions will get wrapped to produce Object value
 
 MODIFICATIONS TO SICP-COMPILER
 - added let
-- add new register ENTRY for going to compiled procedure entry (simpler than using val as the reigster for that)
 - argl uses cons(val, nil) instead of list(val) for the first cons.
 - replace CONTINUE register with CONT
 

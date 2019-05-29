@@ -26,8 +26,8 @@ void test_object() {
   //vector
   print_obj(make_primitive_procedure(test_object));
   print_obj(make_primitive_procedure(add));
-  print_obj(make_compiled_procedure(0, nil));
-  print_obj(make_compiled_procedure(test_object, nil));
+  print_obj(make_compiled_procedure(adr_to_obj(0), nil));
+  print_obj(make_compiled_procedure(adr_to_obj(test_object), nil));
   print_obj(adr_to_obj(0));
   print_obj(adr_to_obj(test_object));
   print_obj(true);
@@ -83,7 +83,9 @@ void test_lib() {
   print_obj(add(argl));
 }
 void test_stack() {
-
+  printf("test_stack\n");
+  save(sym_to_obj("abc"));
+  print_obj(restore());
 }
 
 void test() {
@@ -97,11 +99,6 @@ void test() {
 
 int main() {
   test();
-
-  int flag;
-  char *cont, *entry;
-  Object val, argl, proc;
-  Env env = top_level_env();
 
   return 0;
 }

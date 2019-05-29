@@ -1,6 +1,6 @@
 ;;Tests
-(define (make-test name exp)
-  (compile-to-file (format #f "example/~a.c" name) exp))
+(define (make-test name . exps)
+  (compile-to-file (format #f "example/~a.c" name) (cons 'begin exps)))
 
 ;;with val.u as return value
 (make-test 'adding '(+ 1 2))
@@ -36,3 +36,32 @@
 (make-test 'add '(display (+ 1 2 3 4 5)))
 ;; [kenny@dellArch example]$ ./add.out 
 ;; 15
+
+(make-test 'define
+           '(define x 21)
+           'x)
+;; [kenny@dellArch example]$ ./define.out 
+;; 21
+
+(make-test 'fact1
+           '(define (fact n)
+              (if (= n 0)
+                  1
+                  (* n (fact (- n 1))))))
+;; [kenny@dellArch example]$ ./fact1.out 
+;; [kenny@dellArch example]$ echo $?
+;; 9
+
+(make-test 'fact2
+           '(define (fact n)
+              (if (= n 0)
+                  1
+                  (* n (fact (- n 1)))))
+           '(display (fact 4)))
+
+(make-test 'map1
+           '(define (map1 f list)
+              (if (null? list)
+                  '()
+                  (let ((head (f (car list)))) ;force evaluation
+                    (cons head (map1 f (cdr list)))))))

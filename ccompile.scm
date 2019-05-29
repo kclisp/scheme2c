@@ -46,7 +46,7 @@
 (define (ccompile-dest dest)
   (case (arg-type dest)
     ((label) (arg-val dest))
-    ((reg) (string-append "*" (arg-val dest)))
+    ((reg) (string-append "*obj_clear(" (arg-val dest) ")"))
     (else (error "Unknown dest -- CCOMPILE-DEST" dest))))
 
 (define (ccompile-args args)
@@ -72,7 +72,7 @@
 
 (define (ccompile-arg arg)
   (case (arg-type arg)
-    ((label) (string-append "&&" (arg-val arg)))
+    ((label) (string-append "adr_to_obj(&&" (arg-val arg) ")"))
     ((reg) (arg-val arg))
     ((const) (ccompile-const (cadr arg)))
     (else (error "Unknown arg-type -- CCOMPILE-ARG" arg))))

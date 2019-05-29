@@ -10,8 +10,7 @@
 
 int main() {
   int flag;
-  char *cont, *entry;
-  Object val, argl, proc;
+  Object val, argl, proc, cont;
   Env env = top_level_env();
 
 //CODE

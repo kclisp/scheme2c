@@ -11,8 +11,8 @@ int primitive_procedurep(Object proc);
 Object apply_primitive_procedure(Object proc, Object argl);
 
 //compiled procedure is a cons of entry and env
-Object make_compiled_procedure(void *entry, Env env);
-char *compiled_procedure_entry (Object proc);
+Object make_compiled_procedure(Object entry, Env env);
+Object compiled_procedure_entry (Object proc);
 Env compiled_procedure_env(Object proc);
 
 

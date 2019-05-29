@@ -70,7 +70,11 @@ static void define_primitive(char *sym, void *fn, Env env) {
 }
 Env top_level_env() {
   Env env = cons(nil, nil);
+  //arithmetic
   define_primitive("+", add, env);
+  define_primitive("-", subtract, env);
+  define_primitive("*", multiply, env);
+  //output
   define_primitive("display", display, env);
   return env;
 }
