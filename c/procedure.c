@@ -16,14 +16,17 @@ Object apply_primitive_procedure(Object proc, Object argl) {
   return ((Objfun_ptr*) obj_clear(proc)) (argl);
 }
 
-//compiled procedure is a cons of entry and env
-Object make_compiled_procedure(char *entry, Env env) {
-  return cons(adr_to_obj(entry), env);
+//compiled procedure is internally a cons of entry and env
+static Object flip_cons_proc(Object obj) {
+  return (Object)(obj.u ^ cons_tag ^ cproc_tag);
+}
+Object make_compiled_procedure(void *entry, Env env) {
+  return flip_cons_proc(cons(adr_to_obj(entry), env));
 }
 char *compiled_procedure_entry(Object proc) {
-  return (char *)obj_clear(car(proc));
+  return (char *)obj_clear(car(flip_cons_proc(proc)));
 }
 Env compiled_procedure_env(Object proc) {
-  return cdr(proc);
+  return cdr(flip_cons_proc(proc));
 }
 

@@ -43,11 +43,13 @@ Object int_to_obj(int64_t);
 Object dbl_to_obj(double);
 Object str_to_obj(char *);
 /* Object sym_to_obj(char *); in symbol.h*/
-Object adr_to_obj(char *);
+Object adr_to_obj(void *);
 
 int64_t obj_to_int(Object);
 //clear tags (not useful for float and int)
 uint64_t obj_clear(Object);
+
+uint64_t obj_tag(Object);
 
 void print_obj(Object);
 

@@ -48,9 +48,29 @@ void define_variablem(Object var, Object val, Env env) {
     set_carm(env, cons(cons(var, val), car(env)));
 }
 
+Object extend_environment(Object vars, Object argl, Env env) {
+  Object var, val;
+  Frame f = nil;
+  while (pairp(vars)) {
+    var = car(vars);
+    val = car(argl);
+    f = cons(cons(var, val), f);
+    vars = cdr(vars);
+    argl = cdr(argl);
+  }
+  if (!nullp(vars))             /* vars has rest arg */
+    f = cons(cons(vars, argl), f);
+  return cons(f, env);
+}
+
+//top level should be a constant
 //put all primitives
+static void define_primitive(char *sym, void *fn, Env env) {
+  define_variablem(sym_to_obj(sym), make_primitive_procedure(fn), env);
+}
 Env top_level_env() {
   Env env = cons(nil, nil);
-  define_variablem(sym_to_obj("+"), make_primitive_procedure(&add), env);
+  define_primitive("+", add, env);
+  define_primitive("display", display, env);
   return env;
 }

@@ -55,8 +55,8 @@ if sign bit is available:
 for integers, use as sign -- done
 for pointers, use if inline (not a pointer; data is stored directly) (for symbol, string, vector)
 
-Internally, use ints as boolean values.
-For the actual code, functions will get wrapped to produce Object values.
+Internally (c), use ints as boolean values.
+For the actual (scheme) code, functions will get wrapped to produce Object values (including booleans).
 
 MODIFICATIONS TO SICP-COMPILER
 - added let

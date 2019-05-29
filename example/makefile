@@ -1,3 +1,7 @@
 # using the makefile in ../c
-%.out:
-	$(MAKE) -C ../c/ ../example/$@
+%:
+	$(MAKE) -C ../c/ ../example/$@.out
+
+.PHONE: clean
+clean:
+	rm -f *~ *.o *.out

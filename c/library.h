@@ -10,4 +10,7 @@ int eqp(Object, Object);
 //arithemtic
 Object add(Object);
 
+
+Object display(Object);
+void displayi(Object);
 #endif

@@ -53,16 +53,22 @@ Object dbl_to_obj(double num) {
 Object str_to_obj(char *str) {
   return (Object)((uint64_t)str | exp_ones | str_tag);
 }    
-Object adr_to_obj(char *address) {
+Object adr_to_obj(void *address) {
   return (Object)((uint64_t)address | exp_ones | adr_tag);
 }
 
 int64_t obj_to_int(Object obj) {
+  if ((int64_t)obj.u < 0)
+    return obj.u;
   return obj.u & ~(exp_ones | int_tag);
 }
 //clear tags (not useful for float and int)
 uint64_t obj_clear(Object obj) {
   return obj.u & ~(exp_ones | pointer_mask);
+}
+
+uint64_t obj_tag(Object obj) {
+  return (obj.u >> 48) & 0b1111;
 }
 
 void print_obj(Object obj) {

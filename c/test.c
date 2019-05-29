@@ -5,6 +5,7 @@
 #include "library.h"
 #include "symbol.h"
 #include "boolean.h"
+#include "procedure.h"
 
 //type tests
 void test_object() {
@@ -22,9 +23,12 @@ void test_object() {
   print_obj(str_to_obj("hello, world!"));
   print_obj(str_to_obj(hi)); /* should be different */
   //vector
-  //pproc
-  //cproc
-  //adr
+  print_obj(make_primitive_procedure(test_object));
+  print_obj(make_primitive_procedure(add));
+  print_obj(make_compiled_procedure(0, nil));
+  print_obj(make_compiled_procedure(test_object, nil));
+  print_obj(adr_to_obj(0));
+  print_obj(adr_to_obj(test_object));
   print_obj(true);
   print_obj(false);
 }
@@ -61,6 +65,14 @@ void test_env() {
 }
 void test_proc() {
   printf("test_proc\n");
+  Object proc = make_primitive_procedure(add);
+  printf("pproc? %d\n", primitive_procedurep(proc));
+  Object argl = cons(int_to_obj(10), cons(int_to_obj(13), nil));
+  print_obj(apply_primitive_procedure(proc, argl));
+  argl = cons(int_to_obj(-5), cons(int_to_obj(-2), nil));
+  Object res = apply_primitive_procedure(proc, argl);
+  print_obj(res);
+  printf("res: %d\n", obj_to_int(res));
 }
 void test_lib() {
   printf("test_lib\n");

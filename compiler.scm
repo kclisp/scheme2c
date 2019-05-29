@@ -3,11 +3,6 @@
     (lambda ()
       (display (template-replace (compile-to-c exp))))))
 
-;; (compile-to-file "c/adding.c" '(+ 1 2))
-;; [kenny@dellArch c]$ ./adding.out 
-;; [kenny@dellArch c]$ echo $?
-;; 3
-
 (define (compile-to-c exp)
   (sanitize (ccompile-sequence (caddr (compile exp 'val 'next)))))
 
@@ -31,3 +26,4 @@
     ((#\?) #\p)
     ((#\!) #\m)
     (else char)))
+

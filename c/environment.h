@@ -11,6 +11,10 @@ Binding env_get_binding(Object, Env);
 Object lookup_variable_value(Object, Env);
 
 void define_variablem(Object, Object, Env);
+
+Object extend_environment(Object, Object, Env);
+
+// top level env should be a constant
 Env top_level_env();
 
 #endif
