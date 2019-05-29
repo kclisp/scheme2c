@@ -84,5 +84,9 @@ Env top_level_env() {
   
   //output
   define_primitive("display", display, env);
+
+  //time
+  define_primitive("clock", clockl, env);
+  
   return env;
 }

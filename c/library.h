@@ -22,4 +22,8 @@ Object nullpl(Object);
 //output
 Object display(Object);
 void displayi(Object);
+
+//time
+Object clockl(Object);
+
 #endif

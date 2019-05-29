@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <time.h>
 #include "cons.h"
 #include "boolean.h"
 #include "procedure.h"
@@ -105,4 +106,9 @@ void displayi(Object obj) {
   }
   //jump table on tag
   printers[obj_tag(obj)](obj);
+}
+
+//time
+Object clockl(Object argl) {
+  return (Object)(uint64_t)clock();
 }

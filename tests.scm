@@ -21,9 +21,9 @@
 ;; [kenny@dellArch example]$ echo $?
 ;; 21
 
-(make-test 'display '(display 20))
+(make-test 'display '(display "Hello, world!\n"))
 ;; [kenny@dellArch example]$ ./display.out 
-;; 20
+;; Hello, World!
 
 (make-test 'display2 '(display '(1.3 2 hi "hello" +)))
 ;; [kenny@dellArch example]$ ./display2.out 

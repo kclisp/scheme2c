@@ -2,7 +2,7 @@
 #define OBJECT_H
 
 //for asserts
-/* #define NDEBUG */
+#define NDEBUG
 #include <stdint.h>
 
 //Object definition

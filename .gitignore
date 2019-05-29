@@ -2,6 +2,9 @@
 #*
 *#
 
+*.bci
+*.bin
+*.com
 
 *.o
 *.out

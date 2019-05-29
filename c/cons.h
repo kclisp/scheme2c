@@ -3,7 +3,7 @@
 
 #include "object.h"
 
-#define MAX_CONS 256
+#define MAX_CONS 1<<24
 Object the_cars[MAX_CONS];
 Object the_cdrs[MAX_CONS];
 extern uint64_t free_index;

@@ -3,7 +3,7 @@
 
 #include "object.h"
 
-#define stack_max_level 256
+#define stack_max_level 1<<12
 extern Object stack[];
 
 void save(Object);

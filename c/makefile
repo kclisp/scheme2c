@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I. # -Os -ffunction-sections -fdata-sections -Wl,--gc-sections #smaller size
+CFLAGS=-I. -O3 #speed # -Os -ffunction-sections -fdata-sections -Wl,--gc-sections #smaller size
 DEPS = object.h cons.h environment.h procedure.h library.h symbol.h boolean.h stack.h
 OBJ = object.o cons.o environment.o procedure.o library.o symbol.o boolean.c stack.c
 
