@@ -10,5 +10,5 @@ void save(Object obj) {
 }
 Object restore() {
   assert(stack_index > 0);
-  return stack[stack_index--];
+  return stack[--stack_index];
 }

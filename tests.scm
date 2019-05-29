@@ -32,3 +32,7 @@
 (make-test 'display3 '(display +))
 ;; [kenny@dellArch example]$ ./display3.out 
 ;; #[primitive procedure 0x55d72e2b0d83]
+
+(make-test 'add '(display (+ 1 2 3 4 5)))
+;; [kenny@dellArch example]$ ./add.out 
+;; 15

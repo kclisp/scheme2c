@@ -79,12 +79,14 @@ void test_lib() {
   printf("test_lib\n");
   Object argl = cons(int_to_obj(20), cons(int_to_obj(57), nil));
   print_obj(add(argl));
+  argl = cons(int_to_obj(41), argl);
+  print_obj(add(argl));
 }
 void test_stack() {
 
 }
 
-oid test() {
+void test() {
   test_object();
   test_cons();
   test_env();

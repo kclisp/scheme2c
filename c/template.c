@@ -15,5 +15,5 @@ int main() {
   Env env = top_level_env();
 
 //CODE
-  return 0;
+  return val.u;
 }
