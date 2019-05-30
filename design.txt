@@ -70,9 +70,12 @@ MODIFICATIONS TO SICP-COMPILER
 TODO:
 - keep if expressions in sicp-compiler -- c can handle if expressions (no test branch)
 - quasiquote for sicp-compiler?
+- optimizations
 
 OPTIMIZATIONS:
 - can make binary small by only putting functions that are needed into the env
+  - including scheme library and c primitives (?)
+- make a primitive env -- an array -- and create it compiled from scheme
 
 NOTES:
 - binaries can currently be made pretty small. Stripping binaries:

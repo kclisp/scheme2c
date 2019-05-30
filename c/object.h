@@ -27,9 +27,16 @@ typedef union Object Object;
 #define bool_tag     tag(0b0111)
 
 //predicates
-int dbl_typep(Object);
+inline int has_flag(Object obj, long mask, long flag) {return (obj.u & mask) == flag;}
+
+inline int dbl_typep(Object obj) {return !has_flag(obj, exp_ones, exp_ones);}
+
+inline int tag_has_flag(Object obj, long flag) {
+  return !dbl_typep(obj) && has_flag(obj, pointer_mask, flag);
+}
+
 int int_typep(Object);
-int cons_typep(Object);
+inline int cons_typep(Object obj) {return tag_has_flag(obj, cons_tag);}
 int sym_typep(Object);
 int str_typep(Object);
 int vector_typep(Object);

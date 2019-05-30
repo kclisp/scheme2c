@@ -4,22 +4,15 @@
 #include <stdlib.h>
 
 //predicates
-static int has_flag(Object obj, long mask, long flag) {
-  return (obj.u & mask) == flag;
-}
-static int tag_has_flag(Object obj, long flag) {
-  return !dbl_typep(obj) && has_flag(obj, pointer_mask, flag);
-}
+extern int has_flag(Object, long, long);
+extern int tag_has_flag(Object, long);
 
-int dbl_typep(Object obj) {
-  return !has_flag(obj, exp_ones, exp_ones);
-}
+extern int dbl_typep(Object obj);
+
 int int_typep(Object obj) {
   return !dbl_typep(obj) && has_flag(obj, int_tag, int_tag);
 }
-int cons_typep(Object obj) {
-  return tag_has_flag(obj, cons_tag);
-}
+extern int cons_typep(Object);
 int sym_typep(Object obj) {
   return tag_has_flag(obj, sym_tag);
 }
@@ -44,7 +37,7 @@ int bool_typep(Object obj) {
 
 //casts
 Object dbl_to_obj(double num) {
-  return (Object){.d = num};
+  return (Object){.d = num};    /* check for Nan and inf? If so, map to unique Nan */
 }
 Object int_to_obj(int64_t num) {
   assert(labs(num) < int_tag);
