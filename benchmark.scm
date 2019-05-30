@@ -62,14 +62,6 @@
 
 ;;pitifully slow.
 
-;;POSSIBLE OPTIMIZATIONS:
-;;open-coding primitives
-;;lexical addressing
-;;make sure registers are being used
-;;can stack operations be optimized away?
-;;make sure functions are inlined
-;;profile
-
 ;;AFTER:
 ;;inlined some functions, obarray is an array
 ;;no debug, compile for speed

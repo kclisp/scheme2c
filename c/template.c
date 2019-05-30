@@ -9,7 +9,6 @@
 #include "stack.h"
 
 int main() {
-  int flag;
   Object val, argl, proc, cont;
   Env env = top_level_env();
 

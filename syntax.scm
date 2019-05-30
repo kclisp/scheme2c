@@ -11,11 +11,8 @@
   (symbol->string (cadr dest)))
 (define assign-args cddr)
 
-(define (test? exp)
-  (tagged-list? exp 'test))
-
-(define (branch? exp)
-  (tagged-list? exp 'branch))
+(define (test-branch? exp)
+  (tagged-list? exp 'test-branch))
 
 (define (save? exp)
   (tagged-list? exp 'save))

@@ -57,7 +57,7 @@ virtual address space currently has 48 bit pointers -- enough to fit
 TODO:
 if sign bit is available:
 for integers, use as sign -- done
-for pointers, use if inline (not a pointer; data is stored directly) (for symbol, string, vector)
+for pointers, use if inline (not a pointer; data is stored directly) (for symbol, string, vector -- saves a dereference)
 
 Internally (c), use ints as boolean values.
 For the actual (scheme) code, functions will get wrapped to produce Object values (including booleans).
@@ -66,16 +66,28 @@ MODIFICATIONS TO SICP-COMPILER
 - added let
 - argl uses cons(val, nil) instead of list(val) for the first cons.
 - replace CONTINUE register with CONT
+- keep if expressions in sicp-compiler -- c can handle if expressions (no test, branch)
+  - instead, use test-branch
 
 TODO:
-- keep if expressions in sicp-compiler -- c can handle if expressions (no test branch)
 - quasiquote for sicp-compiler?
+- compile metacircular evaluator
 - optimizations
+- garbage collecter
+
+DONE OPTIMIZATIONS:
+- inlined some functions
 
 OPTIMIZATIONS:
+- open-coding primitives
+- lexical addressing
+- can stack operations be optimized away?
+- make sure functions are inlined
 - can make binary small by only putting functions that are needed into the env
   - including scheme library and c primitives (?)
 - make a primitive env -- an array -- and create it compiled from scheme
+- interleave cars and cdrs -- spatial locality
+  - and have a cons Object be a pointer (saves 1 add)
 
 NOTES:
 - binaries can currently be made pretty small. Stripping binaries:

@@ -7,7 +7,7 @@
 extern int has_flag(Object, long, long);
 extern int tag_has_flag(Object, long);
 
-extern int dbl_typep(Object obj);
+extern int dbl_typep(Object);
 
 int int_typep(Object obj) {
   return !dbl_typep(obj) && has_flag(obj, int_tag, int_tag);

@@ -5,8 +5,7 @@
    ((label? exp) (ccompile-label exp))
    ((goto? exp) (ccompile-goto exp))
    ((assign? exp) (ccompile-assign exp))
-   ((test? exp) (ccompile-test exp))
-   ((branch? exp) (ccompile-branch exp))
+   ((test-branch? exp) (ccompile-test-branch exp))
    ((save? exp) (ccompile-save exp))
    ((restore? exp) (ccompile-restore exp))
    ((perform? exp) (ccompile-perform exp))
@@ -26,11 +25,10 @@
              " = "
              (ccompile-args (assign-args exp))))
 
-(define (ccompile-test exp)
-  (ccompile `(assign flag ,@(cdr exp))))
-
-(define (ccompile-branch exp)
-  (string-append "if (flag) " (ccompile-goto `(goto ,@(cdr exp)))))
+(define (ccompile-test-branch exp)
+  (format #f "if (~a) ~a"
+          (ccompile-args (except-last-pair (cdr exp)))
+          (ccompile-goto `(goto ,(cadddr exp)))))
 
 ;;for save and restore, use temporary variables as stack
 (define (ccompile-save exp)

@@ -148,8 +148,7 @@
          p-code
          (append-instruction-sequences
           (make-instruction-sequence '(val) '()
-           `((test (op false?) (reg val))
-             (branch (label ,f-branch))))
+           `((test-branch (op false?) (reg val) (label ,f-branch))))
           (parallel-instruction-sequences
            (append-instruction-sequences t-branch c-code)
            (append-instruction-sequences f-branch a-code))
@@ -251,8 +250,7 @@
            (if (eq? linkage 'next) after-call linkage)))
       (append-instruction-sequences
        (make-instruction-sequence '(proc) '()
-        `((test (op primitive-procedure?) (reg proc))
-          (branch (label ,primitive-branch))))
+         `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
        (parallel-instruction-sequences
         (append-instruction-sequences
          compiled-branch
