@@ -79,16 +79,24 @@ DONE OPTIMIZATIONS:
 - inlined some functions
 
 OPTIMIZATIONS:
+SICP:
 - open-coding primitives
 - lexical addressing
+  - can completely compile away environment?
+    - the only defines that matter are top-level defines
+    - if so, lookup-variable-value is totally obsolete
+C:
 - can stack operations be optimized away?
 - make sure functions are inlined
 - can make binary small by only putting functions that are needed into the env
   - including scheme library and c primitives (?)
 - make a primitive env -- an array -- and create it compiled from scheme
 - interleave cars and cdrs -- spatial locality
-  - and have a cons Object be a pointer (saves 1 add)
-
+  - and have a cons Object be a pointer (saves 1 add for car)
+  - potentially halves cache misses (?)
+- multithreading
+  - makes code more complicated
+  
 NOTES:
 - binaries can currently be made pretty small. Stripping binaries:
   - "Hello world" in C is 14.14k.

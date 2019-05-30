@@ -57,8 +57,6 @@
 ;;uncompiled scheme uses 2,800,000 words -- 22Mb
 ;;compiled scheme uses ~17,000 words -- 130Kb
 
-;;c code takes 110 milliseconds
-
 
 ;;pitifully slow.
 
@@ -67,3 +65,16 @@
 ;;no debug, compile for speed
 ;;.17, 6
 ;;.64, 7
+;;after more:
+;;currently 50 times slower than compiled scheme
+
+;;c:
+;;ack(3, 9) -- 25 ms
+;;compiled scheme:
+;;(ack 3 9) -- 86 ms
+;;compiled to c:
+;;a lot of memory
+
+;;ack(3, 7) -- 2 ms
+;;(ack 3 7) -- 10 ms
+;;benchmark.out -- 540 ms
