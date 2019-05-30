@@ -36,7 +36,7 @@
                (else (ack (- m 1) (ack m (- n 1))))))
            ;; '(time (lambda () (ack 3 7)))
            '(let ((start (clock)))
-              (display (ack 3 6))
+              (display (ack 3 7))
               (let ((end (clock)))
                 (display (- end start)))))
 ;;with debug
@@ -69,3 +69,9 @@
 ;;can stack operations be optimized away?
 ;;make sure functions are inlined
 ;;profile
+
+;;AFTER:
+;;inlined some functions, obarray is an array
+;;no debug, compile for speed
+;;.17, 6
+;;.64, 7
