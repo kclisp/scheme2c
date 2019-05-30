@@ -1,8 +1,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-//for asserts
-#define NDEBUG
 #include <stdint.h>
 
 //Object definition

@@ -17,10 +17,13 @@ all: $(OBJ)
 
 profile:
 	$(eval CFLAGS += -pg)
+ndebug:
+	$(eval CFLAGS += -DNDEBUG)
 speed:
 	$(eval CFLAGS += -O3)
 size:
 	$(eval CFLAGS += -Os -ffunction-sections -fdata-sections -Wl,--gc-sections)
+
 
 .PHONY: clean
 
