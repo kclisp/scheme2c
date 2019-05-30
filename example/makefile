@@ -1,6 +1,17 @@
-# using the makefile in ../c
+OPTS = 
+
+# use the makefile in ../c
 %:
-	$(MAKE) -C ../c/ ../example/$@.out
+	$(MAKE) -C ../c/ $(OPTS) ../example/$@.out
+
+profile:
+	$(eval OPTS += profile)
+
+speed:
+	$(eval OPTS += speed)
+
+size:
+	$(eval OPTS += size)
 
 .PHONE: clean
 clean:

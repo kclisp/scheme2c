@@ -5,7 +5,8 @@
 
 //predicates
 //equality
-int eqp(Object, Object);
+//addresses are exactly equal
+inline int eqp(Object a, Object b) {return a.u == b.u;}
 
 //arithemtic
 Object add(Object);

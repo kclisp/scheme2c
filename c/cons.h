@@ -2,6 +2,7 @@
 #define CONS_H
 
 #include "object.h"
+#include "library.h"
 
 #define MAX_CONS 1<<24
 Object the_cars[MAX_CONS];
@@ -19,7 +20,7 @@ Object cdr(Object);
 void set_carm(Object, Object);
 void set_cdrm(Object, Object);
 
-int nullp(Object);
-int pairp(Object);
+inline int nullp(Object a) {return eqp(a, nil);}
+inline int pairp(Object a) {return cons_typep(a) && !nullp(a);}
 
 #endif

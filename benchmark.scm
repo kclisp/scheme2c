@@ -5,6 +5,10 @@
     (display (thunk))
     (let ((end (real-time-clock)))
       (format #t "time elapsed: ~a" (internal-time/ticks->seconds (- end start))))))
+(define (memory thunk)
+  (print-gc-statistics)
+  (display (thunk))
+  (print-gc-statistics))
 
 (define (ack m n)
   (cond
@@ -32,7 +36,7 @@
                (else (ack (- m 1) (ack m (- n 1))))))
            ;; '(time (lambda () (ack 3 7)))
            '(let ((start (clock)))
-              (display (ack 3 7))
+              (display (ack 3 6))
               (let ((end (clock)))
                 (display (- end start)))))
 ;;with debug
@@ -44,10 +48,24 @@
 ;;7.3 seconds, 7
 
 ;;no debug, compile for speed
-;;.7 seconds, 6
-;;2.7 seconds, 7
+;;.6 seconds, 6
+;;2.5 seconds, 7
+
+;;(ack 3 7) uses about 2^24 words -- 16 million words -- 125MB
+
+;; (memory (lambda () (ack 3 7)))
+;;uncompiled scheme uses 2,800,000 words -- 22Mb
+;;compiled scheme uses ~17,000 words -- 130Kb
 
 ;;c code takes 110 milliseconds
 
 
 ;;pitifully slow.
+
+;;POSSIBLE OPTIMIZATIONS:
+;;open-coding primitives
+;;lexical addressing
+;;make sure registers are being used
+;;can stack operations be optimized away?
+;;make sure functions are inlined
+;;profile

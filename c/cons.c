@@ -21,12 +21,12 @@ static uint64_t cons_index(Object cons) {
 }
 
 Object car(Object cons) {
-  assert(!nullp(cons));
+  assert(pairp(cons));
   return the_cars[cons_index(cons)];
 }
 
 Object cdr(Object cons) {
-  assert(!nullp(cons));
+  assert(pairp(cons));
   return the_cdrs[cons_index(cons)];
 }
 
@@ -37,9 +37,5 @@ void set_cdrm(Object cons, Object val) {
   the_cdrs[cons_index(cons)] = val;
 }
 
-int nullp(Object a) {
-  return eqp(a, nil);
-}
-int pairp(Object a) {
-  return cons_typep(a) && !nullp(a);
-}
+extern int nullp(Object);
+extern int pairp(Object);

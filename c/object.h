@@ -50,7 +50,7 @@ Object bool_to_obj(int);
 
 int64_t obj_to_int(Object);
 //clear tags (not useful for float and int)
-uint64_t obj_clear(Object);
+inline uint64_t obj_clear(Object obj) {return obj.u & ~(exp_ones | pointer_mask);}
 
 uint64_t obj_tag(Object);
 

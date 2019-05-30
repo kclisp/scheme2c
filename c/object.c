@@ -66,9 +66,7 @@ int64_t obj_to_int(Object obj) {
   return obj.u & ~(exp_ones | int_tag);
 }
 //clear tags (not useful for float and int)
-uint64_t obj_clear(Object obj) {
-  return obj.u & ~(exp_ones | pointer_mask);
-}
+extern uint64_t obj_clear(Object);
 
 uint64_t obj_tag(Object obj) {
   return (obj.u >> 48) & 0b1111;

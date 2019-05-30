@@ -9,10 +9,7 @@
 
 //predicates
 //equality
-//addresses are exactly equal
-int eqp(Object a, Object b) {
-  return a.u == b.u;
-}
+extern int eqp(Object, Object);
 
 //arithmetic
 Object add(Object argl) {
