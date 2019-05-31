@@ -23,7 +23,7 @@ static Object obarray_sym(char *str) {
 
 static void add_obarray_sym(Object sym) {
   assert(ob_free_index < obarray_max_symbols);
-  obarray[ob_free_index] = sym;
+  obarray[ob_free_index++] = sym;
 }
 
 //need to check the obarray

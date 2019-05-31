@@ -18,6 +18,7 @@ Object cons(Object a, Object b) {
 /*   assert(pairp(cons)); */
 /*   return obj_clear(cons); */
 /* } */
+extern uint64_t cons_index(Object);
 
 extern Object car(Object);
 extern Object cdr(Object);
