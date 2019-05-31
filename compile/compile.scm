@@ -1,3 +1,4 @@
+;;after macroexpansion
 (define (compile exp target linkage)
   (cond ((self-evaluating? exp)
          (compile-self-evaluating exp target linkage))
@@ -14,8 +15,6 @@
          (compile-sequence (begin-actions exp)
                            target
                            linkage))
-        ((cond? exp) (compile (cond->if exp) target linkage))
-        ((let? exp) (compile (let->lambda exp) target linkage))
         ((application? exp)
          (compile-application exp target linkage))
         (else

@@ -34,15 +34,10 @@
   (tagged-list? exp 'define))
 
 (define (definition-variable exp)
-  (if (symbol? (cadr exp))
-      (cadr exp)
-      (caadr exp)))
+  (cadr exp))
 
 (define (definition-value exp)
-  (if (symbol? (cadr exp))
-      (caddr exp)
-      (make-lambda (cdadr exp)
-                   (cddr exp))))
+  (caddr exp))
 
 (define (lambda? exp) (tagged-list? exp 'lambda))
 
@@ -86,12 +81,6 @@
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
-
-(define (sequence->exp seq)
-  (cond ((null? seq) seq)
-        ((last-exp? seq) (first-exp seq))
-        (else (make-begin seq))))
-
 (define (make-begin seq) (cons 'begin seq))
 
 (define (cond? exp) (tagged-list? exp 'cond))
@@ -101,29 +90,6 @@
 (define (cond-predicate clause) (car clause))
 (define (cond-actions clause) (cdr clause))
 
-(define (cond->if exp)
-  (expand-clauses (cond-clauses exp)))
-
-(define (expand-clauses clauses)
-  (if (null? clauses)
-      'false                          ; no else clause
-      (let ((first (car clauses))
-            (rest (cdr clauses)))
-        (if (cond-else-clause? first)
-            (if (null? rest)
-                (sequence->exp (cond-actions first))
-                (error "ELSE clause isn't last -- COND->IF"
-                       clauses))
-            (make-if (cond-predicate first)
-                     (sequence->exp (cond-actions first))
-                     (expand-clauses rest))))))
-;; end of Cond support
-
 (define (let? exp) (tagged-list? exp 'let))
 (define (let-bindings exp) (cadr exp))
 (define (let-body exp) (cddr exp))
-
-(define (let->lambda exp)
-  (let ((bindings (let-bindings exp)))
-    (cons (make-lambda (map car bindings) (let-body exp))
-          (map cadr bindings))))

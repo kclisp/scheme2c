@@ -2,4 +2,4 @@
 ;;;; STRUCTURE AND INTERPRETATION OF COMPUTER PROGRAMS
 
 (define (compile-to-reg exp)
-  (compile exp 'val 'next))
+  (compile (macroexpand exp) 'val 'next))
