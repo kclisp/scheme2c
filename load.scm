@@ -8,3 +8,5 @@
 (load "utils")
 (cd-load "compile" "load")
 (cd-load "ccompile" "load")
+(load "tests")
+(load "benchmark")
