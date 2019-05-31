@@ -4,7 +4,7 @@
 #include "procedure.h"
 
 //put all primitives
-Object env_mem[max_env_mem_objects] = {
+Object env_mem[max_env_mem_objects] = {0,
                                       /* make_primitive_procedure - maybe should be a macro? */
 #define PRIMITIVE(scheme_name, c_name) ((Object)((uint64_t)c_name + exp_ones + pproc_tag)),
 #include "primitives.def"
@@ -12,11 +12,11 @@ Object env_mem[max_env_mem_objects] = {
                                        0};
   
 //count up number of primitives
-uint64_t env_free_index = 
-#define PRIMITIVE(scheme_name, c_name) 1 +
+uint64_t env_free_index = 1
+#define PRIMITIVE(scheme_name, c_name) + 1
 #include "primitives.def"
 #undef PRIMITIVE
-                          0;
+                          ;
 
 
 static Object *lexical_address(int env_num, int offset_num, Env env) {

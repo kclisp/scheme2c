@@ -74,3 +74,12 @@
 ;; 2
 ;; hi
 ;; hello
+
+;;sicp 5.5.6
+(make-test 'lexical
+           '((let ((x 3) (y 4))
+                (lambda (a b c d e)
+                  (let ((y (* a b x)) (z (+ c d x)))
+                    (* x y z))))
+             1 2 3 4 5))
+;;should be 180

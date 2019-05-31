@@ -46,15 +46,21 @@ void test_cons() {
 }
 void test_env() {
   printf("test_env\n");
-  print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), top_level_env));
+  Object add_proc = lexical_address_lookup(int_to_obj(0), int_to_obj(0), top_level_env);
+  print_obj(add_proc);
   define_variablem(int_to_obj(0), int_to_obj(0), int_to_obj(2), top_level_env);
-  print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), top_level_env));
-
+  print_obj(add_proc);
+  printf("add: %p\n", add);
+  
   Object env = extend_environment(int_to_obj(1), cons(int_to_obj(22), nil), top_level_env);
   print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), env));
   print_obj(lexical_address_lookup(int_to_obj(1), int_to_obj(0), env));
 
   print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(3), top_level_env));
+
+  Object proc = lexical_address_lookup(int_to_obj(0), int_to_obj(8), top_level_env);
+  print_obj(proc);
+  apply_primitive_procedure(proc, cons(int_to_obj(30), cons(int_to_obj(40), nil)));
 }
 void test_proc() {
   printf("test_proc\n");

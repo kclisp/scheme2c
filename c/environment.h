@@ -4,7 +4,7 @@
 #include "object.h"
 
 //Env is a pointer to env_mem. The first value is the parent env, (except for the
-//top_level_env, which has no parent env) and the rest are variable values.
+//top_level_env, which has 0 instead) and the rest are variable values.
 typedef Object Env;
 
 //Essentially a stack: variable values go here.
