@@ -55,14 +55,13 @@
   (end-with-linkage linkage
    (make-instruction-sequence '(env) (list target)
     `((assign ,target
-              (op lookup-variable-value) ;use lexical addressing
-              (const ,exp)
-              (reg env))))))
+              (op lexical-address-lookup)
+              (const ,(lexical-address-lookup exp cenv)))))))
 
 (define (compile-assignment exp target linkage cenv)
   (let ((var (assignment-variable exp))
         (get-value-code
-         (compile (assignment-value exp) 'val 'next cenv)))
+         (compile (assignment-value exp) 'val 'next cenv))) ;open-code eventually
     (end-with-linkage linkage
      (preserving '(env)
       get-value-code
@@ -76,7 +75,8 @@
 (define (compile-definition exp target linkage cenv)
   (let ((var (definition-variable exp))
         (get-value-code
-         (compile (definition-value exp) 'val 'next cenv))) ;update cenv
+         (compile (definition-value exp) 'val 'next cenv)))
+    (cenv-define-var! var cenv)
     (end-with-linkage linkage
      (preserving '(env)
       get-value-code
@@ -109,7 +109,7 @@
         (after-if (make-label 'after-if)))
     (let ((consequent-linkage
            (if (eq? linkage 'next) after-if linkage)))
-      (let ((p-code (compile (if-predicate exp) 'val 'next cenv)) ;can modify cenv, affecting consequence and alternative
+      (let ((p-code (compile (if-predicate exp) 'val 'next cenv)) ;can modify cenv via set!, affecting consequence and alternative
             (c-code
              (compile
               (if-consequent exp) target consequent-linkage cenv))
@@ -149,7 +149,7 @@
                     (op make-compiled-procedure)
                     (label ,proc-entry)
                     (reg env)))))
-        (compile-lambda-body exp proc-entry cenv)) ;modify cenv
+        (compile-lambda-body exp proc-entry cenv))
        after-lambda))))
 
 (define (compile-lambda-body exp proc-entry cenv)
@@ -163,7 +163,8 @@
                 (const ,formals)
                 (reg argl)
                 (reg env))))
-     (compile-sequence (lambda-body exp) 'val 'return cenv))))
+     (compile-sequence (lambda-body exp) 'val 'return
+                       (extend-cenv (lambda-vars exp) cenv)))))
 
 
 ;;;SECTION 5.5.3

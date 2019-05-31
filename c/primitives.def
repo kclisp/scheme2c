@@ -1,0 +1,11 @@
+PRIMITIVE("+", add)
+PRIMITIVE("-", subtract)
+PRIMITIVE("*", multiply)
+PRIMITIVE("=", numequal)
+PRIMITIVE("cons", consl)
+PRIMITIVE("car", carl)
+PRIMITIVE("cdr", cdrl)
+PRIMITIVE("null?", nullpl)
+PRIMITIVE("display", display)
+PRIMITIVE("clock", clockl)
+#undef PRIMITIVE
