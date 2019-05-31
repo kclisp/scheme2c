@@ -1,8 +1,5 @@
 (define template-c-file "c/template.c")
 
-(define (read-file filename)
-  (read-delimited-string (char-set) (open-input-file filename)))
-
 (define (c-template)
   (read-file template-c-file))
 

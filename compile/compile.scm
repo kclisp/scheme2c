@@ -52,11 +52,13 @@
     `((assign ,target (const ,(text-of-quotation exp)))))))
 
 (define (compile-variable exp target linkage cenv)
-  (end-with-linkage linkage
-   (make-instruction-sequence '(env) (list target)
-    `((assign ,target
-              (op lexical-address-lookup)
-              (const ,(lexical-address-lookup exp cenv)))))))
+  (let ((address (lexical-address-lookup exp cenv)))
+    (end-with-linkage linkage
+     (make-instruction-sequence '(env) (list target)
+      `((assign ,target
+                (op lexical-address-lookup)
+                (const ,(car address))
+                (const ,(cadr address))))))))
 
 (define (compile-assignment exp target linkage cenv)
   (let ((var (assignment-variable exp))
@@ -73,13 +75,11 @@
          (assign ,target (const ok))))))))
 
 (define (compile-definition exp target linkage cenv)
-  (let ((var (definition-variable exp))
-        (get-value-code
-         (compile (definition-value exp) 'val 'next cenv)))
+  (let ((var (definition-variable exp)))
     (cenv-define-var! var cenv)
     (end-with-linkage linkage
      (preserving '(env)
-      get-value-code
+      (compile (definition-value exp) 'val 'next cenv)
       (make-instruction-sequence '(env val) (list target)
        `((perform (op define-variable!)
                   (const ,var)
@@ -130,9 +130,10 @@
 (define (compile-sequence seq target linkage cenv)
   (if (last-exp? seq)
       (compile (first-exp seq) target linkage cenv)
-      (preserving '(env cont)
-       (compile (first-exp seq) target 'next cenv)
-       (compile-sequence (rest-exps seq) target linkage cenv))))
+      (let ((first (compile (first-exp seq) target 'next cenv))) ;force order
+        (preserving '(env cont)
+          first
+          (compile-sequence (rest-exps seq) target linkage cenv)))))
 
 ;;;lambda expressions
 

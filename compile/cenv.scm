@@ -1,11 +1,11 @@
-;;cenv - (frame next-cenv)
+;;cenv - (numframes frame next-cenv)
 ;;frame is a list of bindings (var . val)
 ;;bindings have no value (yet)
 ;; put values in eventually - open-code primitives
-(define (make-cenv frame next-cenv)
-  (list frame next-cenv))
+(define (make-cenv numframes frame next-cenv)
+  (list numframes frame next-cenv))
 (define (make-initial-cenv vars)
-  (extend-cenv vars '()))
+  (make-cenv 0 (vars->frame vars) '()))
 
 (define (lexical-address-lookup var cenv)
   (let ((address (cenv-get-address var cenv)))
@@ -16,41 +16,52 @@
 (define (cenv-get-address var cenv)
   (let loop ((var var)
              (cenv cenv)
-             (env-address 0))
+             (env-address (cenv-numframes cenv)))
     (if (null? cenv)
         #f
         (let ((frame-address (frame-get-address var (cenv-frame cenv))))
           (if frame-address
               (list env-address frame-address)
-              (loop var (cenv-next-cenv cenv) (+ 1 env-address)))))))
+              (loop var (cenv-next-cenv cenv) (- env-address 1)))))))
 
 (define (frame-get-address var frame)
-  (cond
-   ((null? frame) #f)
-   ((eq? var (binding-var (frame-first-binding frame))) 0)
-   (else (+ 1 (frame-get-address var (frame-next-binding frame))))))
+  (let loop ((bindings (frame-bindings frame))
+             (address 0))
+    (cond
+     ((null? frame) #f)
+     ((eq? var (binding-var (car bindings))) address)
+     (else (loop (cdr bindings) (+ 1 address))))))
 
 (define (cenv-define-var! var cenv)     ;no value yet
-  (set-car! cenv (frame-add-binding (make-default-binding var)
-                                    (cenv-frame cenv))))
+  (frame-define-var! var (cenv-frame cenv)))
 (define (extend-cenv vars cenv)
-  (make-cenv (make-frame (map make-default-binding vars))
+  (make-cenv (+ 1 (cenv-numframes cenv))
+             (vars->frame vars)
              cenv))
 
+(define (vars->frame vars)
+  (make-frame (map make-default-binding vars)))
+(define (frame-define-var! var frame)
+  (append! (frame-bindings frame) (list (make-default-binding var))))
+
 ;;Details
-(define (cenv-frame cenv)
+(define (cenv-numframes cenv)
   (car cenv))
-(define (cenv-next-cenv cenv)
+(define (cenv-frame cenv)
   (cadr cenv))
+(define (cenv-next-cenv cenv)
+  (caddr cenv))
+(define (extend-cenv-frame! cenv val)
+  (set-car! (cdr cenv) val))
 
 (define (make-frame bindings)
   bindings)
+(define (frame-bindings frame)
+  frame)
 (define (frame-first-binding frame)
   (car frame))
-(define (frame-next-binding frame)
+(define (frame-next-bindings frame)
   (cdr frame))
-(define (frame-add-binding binding frame)
-  (cons binding frame))
 
 (define (make-binding var val)
   (cons var val))

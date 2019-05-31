@@ -3,4 +3,5 @@
         "register"
         "instructions"
         "compile"
+        "cenv"
         "compiler"))

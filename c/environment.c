@@ -70,23 +70,10 @@ static void define_primitive(char *sym, void *fn, Env env) {
 }
 Env top_level_env() {
   Env env = cons(nil, nil);
-  //arithmetic
-  define_primitive("+", add, env);
-  define_primitive("-", subtract, env);
-  define_primitive("*", multiply, env);
-  define_primitive("=", numequal, env);
 
-  //list
-  define_primitive("cons", consl, env);
-  define_primitive("car", carl, env);
-  define_primitive("cdr", cdrl, env);
-  define_primitive("null?", nullpl, env);
-  
-  //output
-  define_primitive("display", display, env);
-
-  //time
-  define_primitive("clock", clockl, env);
+#define PRIMITIVE(scheme_name, c_name) define_primitive(#scheme_name, c_name, env);
+#include "primitives.def"
+#undef PRIMITIVE
   
   return env;
 }
