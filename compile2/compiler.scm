@@ -5,7 +5,7 @@
 
 (define (compile-to-c exp)
   (set! label-counter 0)
-  (sanitize (ccompile-sequence (caddr (compile exp 'val 'next)))))
+  (sanitize (ccompile-sequence (caddr (compile-to-reg exp)))))
 
 (define (line . args)
   (string-append* (append args (list "\n"))))
