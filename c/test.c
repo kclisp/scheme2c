@@ -46,23 +46,15 @@ void test_cons() {
 }
 void test_env() {
   printf("test_env\n");
-  Object x = sym_to_obj("x");
-  Object y = sym_to_obj("y");
-    
-  Binding b = cons(x, int_to_obj(3));
-  Frame f = cons(b, nil);
-  b = cons(y, int_to_obj(40));
-  f = cons(b, f);
-  Env e = cons(f, nil);
-  print_obj(env_get_binding(x, e));
-  print_obj(env_get_binding(int_to_obj(2), e));
-  print_obj(lookup_variable_value(x, e));
-  print_obj(lookup_variable_value(y, e));
+  print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), top_level_env));
+  define_variablem(int_to_obj(0), int_to_obj(0), int_to_obj(2), top_level_env);
+  print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), top_level_env));
 
-  Object z = sym_to_obj("z");
-  define_variablem(z, dbl_to_obj(3.45), e);
-  print_obj(env_get_binding(z, e));
-  print_obj(lookup_variable_value(z, e));
+  Object env = extend_environment(int_to_obj(1), cons(int_to_obj(22), nil), top_level_env);
+  print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), env));
+  print_obj(lexical_address_lookup(int_to_obj(1), int_to_obj(0), env));
+
+  print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(3), top_level_env));
 }
 void test_proc() {
   printf("test_proc\n");

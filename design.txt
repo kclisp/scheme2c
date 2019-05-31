@@ -85,6 +85,8 @@ SICP:
   - can completely compile away environment?
     - the only defines that matter are top-level defines
     - if so, lookup-variable-value is totally obsolete
+- have argl construct an array
+
 C:
 - can stack operations be optimized away?
 - make sure functions are inlined

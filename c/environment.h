@@ -3,18 +3,22 @@
 
 #include "object.h"
 
-typedef Object Binding;         /* a binding is a cons: car is var, cdr is val */
-typedef Object Frame;           /* a frame is a list (cons) of bindings */
-typedef Object Env;             /* an env is a cons of frame and next env */
+//Env is a pointer to env_mem. The first value is the parent env, (except for the
+//top_level_env, which has no parent env) and the rest are variable values.
+typedef Object Env;
 
-Binding env_get_binding(Object, Env);
-Object lookup_variable_value(Object, Env);
+//Essentially a stack: variable values go here.
+//Eventually free up memory too, when procedure is done.
+#define max_env_mem_objects 1 << 9
+extern Object env_mem[];
+extern uint64_t env_free_index;
 
-void define_variablem(Object, Object, Env);
+#define top_level_env (adr_to_obj(env_mem))
+
+Object lexical_address_lookup(Object, Object, Env);
+
+void define_variablem(Object, Object, Object, Env);
 
 Object extend_environment(Object, Object, Env);
-
-// top level env should be a constant
-Env top_level_env();
 
 #endif

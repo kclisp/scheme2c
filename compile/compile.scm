@@ -58,7 +58,8 @@
       `((assign ,target
                 (op lexical-address-lookup)
                 (const ,(car address))
-                (const ,(cadr address))))))))
+                (const ,(cadr address))
+                (reg env)))))))
 
 (define (compile-assignment exp target linkage cenv)
   (let ((var (assignment-variable exp))
@@ -69,7 +70,7 @@
       get-value-code
       (make-instruction-sequence '(env val) (list target)
        `((perform (op set-variable-value!)
-                  (const ,var)
+                  (const ,var)          ;change eventually
                   (reg val)
                   (reg env))
          (assign ,target (const ok))))))))
@@ -77,15 +78,17 @@
 (define (compile-definition exp target linkage cenv)
   (let ((var (definition-variable exp)))
     (cenv-define-var! var cenv)
-    (end-with-linkage linkage
-     (preserving '(env)
-      (compile (definition-value exp) 'val 'next cenv)
-      (make-instruction-sequence '(env val) (list target)
-       `((perform (op define-variable!)
-                  (const ,var)
-                  (reg val)
-                  (reg env))
-         (assign ,target (const ok))))))))
+    (let ((address (lexical-address-lookup var cenv)))
+      (end-with-linkage linkage
+       (preserving '(env)
+        (compile (definition-value exp) 'val 'next cenv)
+        (make-instruction-sequence '(env val) (list target)
+         `((perform (op define-variable!)
+                    (const ,(car address))
+                    (const ,(cadr address))
+                    (reg val)
+                    (reg env))
+           (assign ,target (const ok)))))))))
 
 
 ;;;conditional expressions
@@ -154,18 +157,18 @@
        after-lambda))))
 
 (define (compile-lambda-body exp proc-entry cenv)
-  (let ((formals (lambda-parameters exp)))
+  (let ((vars (lambda-vars exp)))
     (append-instruction-sequences
      (make-instruction-sequence '(env proc argl) '(env)
       `(,proc-entry
         (assign env (op compiled-procedure-env) (reg proc))
         (assign env
                 (op extend-environment)
-                (const ,formals)
+                (const ,(length vars))
                 (reg argl)
                 (reg env))))
      (compile-sequence (lambda-body exp) 'val 'return
-                       (extend-cenv (lambda-vars exp) cenv)))))
+                       (extend-cenv vars cenv)))))
 
 
 ;;;SECTION 5.5.3

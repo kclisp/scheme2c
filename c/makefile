@@ -19,6 +19,8 @@ profile:
 	$(eval CFLAGS += -pg)
 ndebug:
 	$(eval CFLAGS += -DNDEBUG)
+debug:
+	$(eval CFLAGS += -g)
 speed:
 	$(eval CFLAGS += -O3)
 size:

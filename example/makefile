@@ -8,6 +8,8 @@ profile:
 	$(eval OPTS += profile)
 ndebug:
 	$(eval OPTS += ndebug)
+debug:
+	$(eval OPTS += debug)
 speed:
 	$(eval OPTS += speed)
 size:

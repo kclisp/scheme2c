@@ -14,6 +14,5 @@
                (symbol (substring line (+ 1 par) com)))))
        (read-lines (primitive-file))))
 
-;;make sure cenv is ordered with the c environment
 (define (get-primitives-cenv)
   (make-initial-cenv (primitives)))

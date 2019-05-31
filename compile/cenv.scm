@@ -25,10 +25,12 @@
               (loop var (cenv-next-cenv cenv) (- env-address 1)))))))
 
 (define (frame-get-address var frame)
-  (let loop ((bindings (frame-bindings frame))
+  (bindings-get-address var (frame-bindings frame)))
+(define (bindings-get-address var bindings)
+  (let loop ((bindings bindings)
              (address 0))
     (cond
-     ((null? frame) #f)
+     ((null? bindings) #f)
      ((eq? var (binding-var (car bindings))) address)
      (else (loop (cdr bindings) (+ 1 address))))))
 

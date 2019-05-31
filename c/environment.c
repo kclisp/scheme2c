@@ -1,79 +1,47 @@
 #include "environment.h"
-#include <stddef.h>
-#include <assert.h>
 #include "cons.h"
 #include "library.h"
 #include "procedure.h"
-#include "symbol.h"
-#include "boolean.h"
 
-//returns false on failure
-static Binding frame_get_binding(Object var, Frame frame) {
-  Binding b;
-  while (pairp(frame)) {
-    b = car(frame);
-    if (nullp(b))
-      return false;
-    if (eqp(car(b), var))
-      return b;
-    frame = cdr(frame);
-  }
-  return false;
-}
-
-//returns false on failure
-Binding env_get_binding(Object var, Env env) {
-  Binding b;
-  while (pairp(env)) {
-    b = frame_get_binding(var, car(env));
-    if (pairp(b))
-      return b;
-    env = cdr(env);
-  }
-  return false;
-}
-
-//error if var is not in env
-Object lookup_variable_value(Object var, Env env) {
-  Binding b = env_get_binding(var, env);
-  assert(truep(b));
-  return cdr(b);
-}
-
-void define_variablem(Object var, Object val, Env env) {
-  Binding b = frame_get_binding(var, car(env));
-  if (truep(b))
-    set_cdrm(b, val);
-  else
-    set_carm(env, cons(cons(var, val), car(env)));
-}
-
-Object extend_environment(Object vars, Object argl, Env env) {
-  Object var, val;
-  Frame f = nil;
-  while (pairp(vars)) {
-    var = car(vars);
-    val = car(argl);
-    f = cons(cons(var, val), f);
-    vars = cdr(vars);
-    argl = cdr(argl);
-  }
-  if (!nullp(vars))             /* vars has rest arg */
-    f = cons(cons(vars, argl), f);
-  return cons(f, env);
-}
-
-//top level should be a constant
 //put all primitives
-static void define_primitive(char *sym, void *fn, Env env) {
-  define_variablem(sym_to_obj(sym), make_primitive_procedure(fn), env);
-}
-Env top_level_env() {
-  Env env = cons(nil, nil);
-
-#define PRIMITIVE(scheme_name, c_name) define_primitive(#scheme_name, c_name, env);
+Object env_mem[max_env_mem_objects] = {
+                                      /* make_primitive_procedure - maybe should be a macro? */
+#define PRIMITIVE(scheme_name, c_name) ((Object)((uint64_t)c_name + exp_ones + pproc_tag)),
 #include "primitives.def"
 #undef PRIMITIVE
+                                       0};
   
-  return env;
+//count up number of primitives
+uint64_t env_free_index = 
+#define PRIMITIVE(scheme_name, c_name) 1 +
+#include "primitives.def"
+#undef PRIMITIVE
+                          0;
+
+
+static Object *lexical_address(int env_num, int offset_num, Env env) {
+  for (; env_num > 0; env_num--)
+    env = *(Object *)obj_clear(env);
+  return (Object *)obj_clear(env) + offset_num + 1; /* skip parent env */
+}
+
+Object lexical_address_lookup(Object env_num, Object offset_num, Env env) {
+  return *lexical_address(obj_to_int(env_num), obj_to_int(offset_num), env);
+}
+
+//should be the same as assignment, once i get to it
+void define_variablem(Object env_num, Object offset_num, Object val, Env env) {
+  *lexical_address(obj_to_int(env_num), obj_to_int(offset_num), env) = val;
+}
+
+Object extend_environment(Object num_vars, Object argl, Env env) {
+  Object new_env = adr_to_obj(env_mem + env_free_index);
+  int num;
+  env_mem[env_free_index++] = env;
+  for (num = obj_to_int(num_vars); num > 0; num--) {
+    env_mem[env_free_index++] = car(argl);
+    argl = cdr(argl);
+  }
+  //last variable -- bound to rest - TODO
+  return new_env;
 }

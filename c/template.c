@@ -10,7 +10,7 @@
 
 int main() {
   Object val, argl, proc, cont;
-  Env env = top_level_env();
+  Env env = top_level_env;
 
 //CODE
   return val.u;
