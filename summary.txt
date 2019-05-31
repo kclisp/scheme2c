@@ -1,14 +1,14 @@
 SUMMARY:
 
-         Compile                    Compile 2      Wrap                 Assemble
-Scheme ----------> register scheme -----------> C ------> C (complete) ----------> Executable
-            |                                        A
-            | Data                                   |
-            V                                        |
-     Lexical addressing                              | Scheme library and C base
-     Open-Code primitives                            |
-     Types (?)                                       |
-     Needed functions -------------------------------/
+        Macroexpand                     Compile                     CCompile     Wrap                 Assemble
+Scheme -------------> simpler scheme  ----------> register scheme ----------> C ------> C (complete) ----------> Executable
+                                           |                                       A
+                                           | Data                                  |
+                                           V                                       |
+                                    Lexical addressing                             | Scheme library and C base
+                                    Open-Code primitives                           |
+                                    Types (?)                                      |
+                                    Needed functions ------------------------------/
 
 TODO:
 1. Lexical addressing

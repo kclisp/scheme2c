@@ -6,4 +6,4 @@
       (lambda () (load file))
       (lambda () (cd here)))))
 (cd-load "compile" "load")
-(cd-load "compile2" "load")
+(cd-load "ccompile" "load")
