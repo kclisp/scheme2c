@@ -2,7 +2,16 @@
 ;;;; STRUCTURE AND INTERPRETATION OF COMPUTER PROGRAMS
 
 (define (compile-to-reg exp)
-  (compile (macroexpand exp) 'val 'next (get-primitives-cenv)))
+  (let* ((cenv (get-primitives-cenv))
+         (init-length (cenv-num-bindings cenv)))
+    (let* ((compiled (caddr (compile (macroexpand exp) 'val 'next cenv)))
+           (new-length (cenv-num-bindings cenv)))
+      ;; the top level environment was extended
+      (if (> new-length init-length)
+          (cons `(perform (op increase-env-size)
+                          (const ,(- new-length init-length)))
+                compiled)
+          compiled))))
 
 (define (primitive-file) "c/primitives.def")
 (define (primitives)

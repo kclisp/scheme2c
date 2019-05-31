@@ -39,6 +39,11 @@
 (define (extend-cenv vars cenv)
   (make-cenv (vars->frame vars) cenv))
 
+(define (cenv-num-bindings cenv)
+  (frame-num-bindings (cenv-frame cenv)))
+(define (frame-num-bindings frame)
+  (length (frame-bindings frame)))
+
 (define (vars->frame vars)
   (make-frame (map make-default-binding vars)))
 (define (frame-define-var! var frame)

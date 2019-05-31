@@ -45,3 +45,5 @@ Object extend_environment(Object num_vars, Object argl, Env env) {
   //last variable -- bound to rest - TODO
   return new_env;
 }
+
+extern void increase_env_size(Object);

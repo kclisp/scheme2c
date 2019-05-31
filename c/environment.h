@@ -20,5 +20,9 @@ Object lexical_address_lookup(Object, Object, Env);
 void define_variablem(Object, Object, Object, Env);
 
 Object extend_environment(Object, Object, Env);
+//eventually pass this data as metadata?
+inline void increase_env_size(Object amount) {
+  env_free_index += obj_to_int(amount);
+}
 
 #endif
