@@ -78,3 +78,6 @@
 ;;ack(3, 7) -- 2 ms
 ;;(ack 3 7) -- 10 ms
 ;;benchmark.out -- 540 ms
+
+;;lexical address part 1
+;;benchmark.out 274 ms

@@ -68,6 +68,8 @@ MODIFICATIONS TO SICP-COMPILER
 - replace CONTINUE register with CONT
 - keep if expressions in sicp-compiler -- c can handle if expressions (no test, branch)
   - instead, use test-branch
+- separate macroexpansions step
+- lexical addressing
 
 TODO:
 - quasiquote for sicp-compiler?
@@ -77,14 +79,14 @@ TODO:
 
 DONE OPTIMIZATIONS:
 - inlined some functions
+- lexical addressing
+  - completely compile away environment
+    - the only defines that matter are top-level defines
+    - lookup-variable-value is replaced with lexical-address-lookup
 
 OPTIMIZATIONS:
 SICP:
 - open-coding primitives
-- lexical addressing
-  - can completely compile away environment?
-    - the only defines that matter are top-level defines
-    - if so, lookup-variable-value is totally obsolete
 - have argl construct an array
 
 C:
