@@ -93,5 +93,14 @@
 ;;should be 180
 
 (make-test 'closure
-           '(define ((adder x) y) (+ x y))
+           '(define ((adder x) y) (+ x y)) ;only y gets collected after the second call
            '((adder 3) 2))
+
+(make-test 'nested-lambdas
+           '(define (foo x y)
+              (display (+ x y))
+              (lambda (z) (+ y z)))    ;x should get collected.
+           '(foo 1 2)
+           '((foo 3 4) 5))
+;;After internal lambda is applied, z should also be collected
+

@@ -2,6 +2,7 @@
         "macroexpand"
         "register"
         "instructions"
+        "labels"
         "compile"
         "cenv"
         "compiler"))

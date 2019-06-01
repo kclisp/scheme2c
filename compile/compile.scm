@@ -29,9 +29,19 @@
           '((goto (reg cont)))))
         ((eq? linkage 'next)
          (empty-instruction-sequence))
-        (else
+        ((lambda-ending? linkage) ;retract environment
+         (make-instruction-sequence '(cont) ()
+          `(,(lambda-ending-sequence linkage)
+            (goto (reg cont)))))
+        ((label? linkage)
          (make-instruction-sequence '() '()
-          `((goto (label ,linkage)))))))
+          `((goto ,linkage))))
+        (else
+         (error "Unknown linkage -- COMPILE-LINKAGE" linkage))))
+
+(define (lambda-ending? linkage) (tagged-list? linkage 'lambda-ending))
+(define (lambda-ending-sequence linkage)
+  `(perform (op retract-environment) (const ,(cadr linkage))))
 
 (define (end-with-linkage linkage instruction-sequence)
   (preserving '(cont)
@@ -93,18 +103,6 @@
 
 ;;;conditional expressions
 
-;;;labels (from footnote)
-(define label-counter 0)
-
-(define (new-label-number)
-  (set! label-counter (+ 1 label-counter))
-  label-counter)
-
-(define (make-label name)
-  (string->symbol
-    (string-append (symbol->string name)
-                   (number->string (new-label-number)))))
-;; end of footnote
 
 (define (compile-if exp target linkage cenv)
   (let ((t-branch (make-label 'true-branch))
@@ -122,11 +120,11 @@
          p-code
          (append-instruction-sequences
           (make-instruction-sequence '(val) '()
-           `((test-branch (op false?) (reg val) (label ,f-branch))))
+           `((test-branch (op false?) (reg val) ,f-branch)))
           (parallel-instruction-sequences
-           (append-instruction-sequences t-branch c-code)
-           (append-instruction-sequences f-branch a-code))
-          after-if))))))
+           (append-instruction-sequences (label t-branch) c-code)
+           (append-instruction-sequences (label f-branch) a-code))
+          (label after-if)))))))
 
 ;;; sequences
 
@@ -151,23 +149,25 @@
          (make-instruction-sequence '(env) (list target)
           `((assign ,target
                     (op make-compiled-procedure)
-                    (label ,proc-entry)
+                    ,proc-entry
                     (reg env)))))
         (compile-lambda-body exp proc-entry cenv))
-       after-lambda))))
+       (label after-lambda)))))
 
 (define (compile-lambda-body exp proc-entry cenv)
-  (let ((vars (lambda-vars exp)))
+  (let* ((vars (lambda-vars exp))
+         (num-vars (length vars))
+         (linkage `(lambda-ending ,num-vars))) ;the end of a lambda should retract-environment
     (append-instruction-sequences
      (make-instruction-sequence '(env proc argl) '(env)
       `(,proc-entry
         (assign env (op compiled-procedure-env) (reg proc))
         (assign env
                 (op extend-environment)
-                (const ,(length vars))
+                (const ,num-vars)
                 (reg argl)
                 (reg env))))
-     (compile-sequence (lambda-body exp) 'val 'return
+     (compile-sequence (lambda-body exp) 'val 'return ;; linkage
                        (extend-cenv vars cenv)))))
 
 
@@ -226,13 +226,13 @@
            (if (eq? linkage 'next) after-call linkage)))
       (append-instruction-sequences
        (make-instruction-sequence '(proc) '()
-         `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
+         `((test-branch (op primitive-procedure?) (reg proc) ,primitive-branch)))
        (parallel-instruction-sequences
         (append-instruction-sequences
-         compiled-branch
+         (label compiled-branch)
          (compile-proc-appl target compiled-linkage))
         (append-instruction-sequences
-         primitive-branch
+         (label primitive-branch)
          (end-with-linkage linkage
           (make-instruction-sequence '(proc argl)
                                      (list target)
@@ -240,28 +240,33 @@
                      (op apply-primitive-procedure)
                      (reg proc)
                      (reg argl)))))))
-       after-call))))
+       (label after-call)))))
 
 ;;;applying compiled procedures
 
+;;linkage is either return, label, or lambda-ending
 (define (compile-proc-appl target linkage)
-  (if (and (not (eq? target 'val)) (eq? linkage 'return))
-      (error "return linkage, target not val -- COMPILE"
-             target)
-      (let ((base '((assign val (op compiled-procedure-entry)
-                                  (reg proc))
-                    (goto (reg val)))))
-        (cond ((and (eq? target 'val) (not (eq? linkage 'return)))
-               (make-instruction-sequence '(proc) all-regs
-                 `((assign cont (label ,linkage))
-                   ,@base)))
-              ((and (not (eq? target 'val)) (not (eq? linkage 'return)))
-               (let ((proc-return (make-label 'proc-return)))
-                 (make-instruction-sequence '(proc) all-regs
-                   `((assign cont (label ,proc-return))
-                     ,@base
-                     ,proc-return
-                     (assign ,target (reg val))
-                     (goto (label ,linkage))))))
-              ((and (eq? target 'val) (eq? linkage 'return))
-               (make-instruction-sequence '(proc cont) all-regs base))))))
+  (let ((base `((assign val (op compiled-procedure-entry)
+                        (reg proc))
+                ,@(if (lambda-ending? linkage)
+                      (list (lambda-ending-sequence linkage))
+                      '())
+                (goto (reg val)))))
+    (cond ((and (eq? target 'val) (label? linkage))
+           (make-instruction-sequence '(proc) all-regs
+            `((assign cont ,linkage)
+              ,@base)))
+          ((and (not (eq? target 'val)) (label? linkage))
+           (let ((proc-return (make-label 'proc-return)))
+             (make-instruction-sequence '(proc) all-regs
+              `((assign cont ,proc-return)
+                ,@base
+                ,proc-return
+                (assign ,target (reg val))
+                (goto ,linkage)))))
+          ((and (eq? target 'val) (not (label? linkage)))
+           (make-instruction-sequence '(proc cont) all-regs base))
+          ((and (not (eq? target 'val)) (not (label? linkage)))
+           (error "return linkage, target not val -- COMPILE"
+                  target))
+          (else (error "Unknown target and linkage -- COMPILE-PROC-APPL" target linkage)))))
