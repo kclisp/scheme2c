@@ -33,9 +33,9 @@
          (make-instruction-sequence '(cont) ()
           `(,(lambda-ending-sequence linkage)
             (goto (reg cont)))))
-        ((label? linkage)
+        ((symbol? linkage)
          (make-instruction-sequence '() '()
-          `((goto ,linkage))))
+          `((goto (label ,linkage)))))
         (else
          (error "Unknown linkage -- COMPILE-LINKAGE" linkage))))
 
@@ -120,11 +120,11 @@
          p-code
          (append-instruction-sequences
           (make-instruction-sequence '(val) '()
-           `((test-branch (op false?) (reg val) ,f-branch)))
+           `((test-branch (op false?) (reg val) (label ,f-branch))))
           (parallel-instruction-sequences
-           (append-instruction-sequences (label t-branch) c-code)
-           (append-instruction-sequences (label f-branch) a-code))
-          (label after-if)))))))
+           (append-instruction-sequences t-branch c-code)
+           (append-instruction-sequences f-branch a-code))
+          after-if))))))
 
 ;;; sequences
 
@@ -149,10 +149,10 @@
          (make-instruction-sequence '(env) (list target)
           `((assign ,target
                     (op make-compiled-procedure)
-                    ,proc-entry
+                    (label ,proc-entry)
                     (reg env)))))
         (compile-lambda-body exp proc-entry cenv))
-       (label after-lambda)))))
+       after-lambda))))
 
 (define (compile-lambda-body exp proc-entry cenv)
   (let* ((vars (lambda-vars exp))
@@ -226,13 +226,13 @@
            (if (eq? linkage 'next) after-call linkage)))
       (append-instruction-sequences
        (make-instruction-sequence '(proc) '()
-         `((test-branch (op primitive-procedure?) (reg proc) ,primitive-branch)))
+        `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
        (parallel-instruction-sequences
         (append-instruction-sequences
-         (label compiled-branch)
+         compiled-branch
          (compile-proc-appl target compiled-linkage))
         (append-instruction-sequences
-         (label primitive-branch)
+         primitive-branch
          (end-with-linkage linkage
           (make-instruction-sequence '(proc argl)
                                      (list target)
@@ -240,12 +240,13 @@
                      (op apply-primitive-procedure)
                      (reg proc)
                      (reg argl)))))))
-       (label after-call)))))
+       after-call))))
 
 ;;;applying compiled procedures
 
 ;;linkage is either return, label, or lambda-ending
 (define (compile-proc-appl target linkage)
+  (define (label? obj) (not (or (eq? obj 'return) (lambda-ending? obj))))
   (let ((base `((assign val (op compiled-procedure-entry)
                         (reg proc))
                 ,@(if (lambda-ending? linkage)
@@ -254,16 +255,16 @@
                 (goto (reg val)))))
     (cond ((and (eq? target 'val) (label? linkage))
            (make-instruction-sequence '(proc) all-regs
-            `((assign cont ,linkage)
+            `((assign cont (label ,linkage))
               ,@base)))
           ((and (not (eq? target 'val)) (label? linkage))
            (let ((proc-return (make-label 'proc-return)))
              (make-instruction-sequence '(proc) all-regs
-              `((assign cont ,proc-return)
+              `((assign cont (label ,proc-return))
                 ,@base
                 ,proc-return
                 (assign ,target (reg val))
-                (goto ,linkage)))))
+                (goto (label ,linkage))))))
           ((and (eq? target 'val) (not (label? linkage)))
            (make-instruction-sequence '(proc cont) all-regs base))
           ((and (not (eq? target 'val)) (not (label? linkage)))
