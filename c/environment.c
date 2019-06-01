@@ -1,4 +1,5 @@
 #include "environment.h"
+#include <assert.h>
 #include "cons.h"
 #include "library.h"
 #include "procedure.h"
@@ -36,16 +37,17 @@ void define_variablem(Object env_num, Object offset_num, Object val, Env env) {
 
 Object extend_environment(Object num_vars, Object argl, Env env) {
   Object new_env = adr_to_obj(env_mem + env_free_index);
-  int num;
+  int num = obj_to_int(num_vars);
+  assert(env_free_index + num <= max_env_mem_objects);
+  
   env_mem[env_free_index++] = env;
-  for (num = obj_to_int(num_vars); num > 0; num--) {
+  for (; num > 0; num--) {
     env_mem[env_free_index++] = car(argl);
     argl = cdr(argl);
   }
   //last variable -- bound to rest - TODO
   return new_env;
 }
-extern void retract_environment(Object);
 
 extern void increase_env_size(Object);
 

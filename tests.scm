@@ -92,10 +92,6 @@
              1 2 3 4 5))
 ;;should be 180
 
-(make-test 'lexical2 '(lambda (x) x))
-
-(make-test 'lexical3 '((lambda (x) x) 20))
-
-(make-test 'lexical4 '((lambda (x) (+ x 1) x) 20))
-
-(make-test 'lexical5 '((lambda (x) x (+ x 1)) 20))
+(make-test 'closure
+           '(define ((adder x) y) (+ x y))
+           '((adder 3) 2))
