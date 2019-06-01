@@ -191,9 +191,11 @@
               (operands exp)))
         (proc-code (compile (operator exp) 'proc 'next cenv)))
     (preserving '(cont)
-     (preserving '(env argl)
+     (preserving '(env)
       (construct-arglist operand-codes)
-      proc-code)
+      (preserving '(argl)
+       proc-code
+       (make-instruction-sequence '(argl) '() '()))) ;always save argl for procedure call
      (compile-procedure-call target linkage))))
 
 (define (construct-arglist operand-codes)

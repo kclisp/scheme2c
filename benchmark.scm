@@ -81,3 +81,6 @@
 
 ;;lexical address part 1
 ;;benchmark.out 274 ms
+
+;;compile operands first
+;;248 ms

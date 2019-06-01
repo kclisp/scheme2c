@@ -62,13 +62,14 @@ MODIFICATIONS TO SICP-COMPILER
   - instead, use test-branch
 - separate macroexpansions step
 - lexical addressing
-
+- procedure application -- operands compiled first
 
 GOALS:
 - compile metacircular evaluator
 - same speed or faster compared to compiled mit scheme
   - currently numerical programs (ack)
-  
+- less memory than mit scheme
+
 TODO:
 - quasiquote for sicp-compiler?
 - optimizations
@@ -109,9 +110,10 @@ OPTIMIZATIONS:
 SICP:
 - open-coding primitives
 - have argl construct an array
+- compile away check for compiled procedures
 C:
 - can stack operations be optimized away?
-  - for multiple saves in a row, use peek instead
+  - for multiple same saves in a row, use peek instead
 - make sure functions are inlined
 - can make binary small by only putting functions that are needed into the env
   - including scheme library and c primitives (?)
