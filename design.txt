@@ -75,11 +75,16 @@ TODO:
 - garbage collecter
 
 FINISHED OPTIMIZATIONS:
-- inlined some functions
+SICP:
 - lexical addressing
   - completely compile away environment
     - the only defines that matter are top-level defines
     - lookup-variable-value is replaced with lexical-address-lookup
+- procedure application -- should compile operands first -- then no need to save proc
+  - in fact, proc might disappear entirely
+    - turns out, this makes the benchmark slower. I'm not sure why
+C:
+- inlined some functions
 
 FAILED OPTIMIZATIONS:
 - essentially automatic collection of environments
@@ -104,10 +109,9 @@ OPTIMIZATIONS:
 SICP:
 - open-coding primitives
 - have argl construct an array
-- procedure application -- should compile operands first -- then no need to save proc
-  - in fact, proc might disappear entirely
 C:
 - can stack operations be optimized away?
+  - for multiple saves in a row, use peek instead
 - make sure functions are inlined
 - can make binary small by only putting functions that are needed into the env
   - including scheme library and c primitives (?)

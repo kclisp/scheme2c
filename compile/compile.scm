@@ -186,15 +186,15 @@
 ;;;combinations
 
 (define (compile-application exp target linkage cenv)
-  (let ((proc-code (compile (operator exp) 'proc 'next cenv))
-        (operand-codes
+  (let ((operand-codes
          (map (lambda (operand) (compile operand 'val 'next cenv))
-              (operands exp))))
-    (preserving '(env cont)
-     proc-code
-     (preserving '(proc cont)
+              (operands exp)))
+        (proc-code (compile (operator exp) 'proc 'next cenv)))
+    (preserving '(cont)
+     (preserving '(env argl)
       (construct-arglist operand-codes)
-      (compile-procedure-call target linkage)))))
+      proc-code)
+     (compile-procedure-call target linkage))))
 
 (define (construct-arglist operand-codes)
   (let ((operand-codes (reverse operand-codes)))
