@@ -5,7 +5,7 @@
   (let* ((cenv (get-primitives-cenv))
          (init-length (cenv-num-bindings cenv))
          (exp (macroexpand exp)))
-    (annotate-lambdas exp)
+    ;; (annotate-lambdas exp)
     (let* ((compiled (caddr (compile exp 'val 'next cenv)))
            (new-length (cenv-num-bindings cenv)))
       ;; the top level environment was extended

@@ -84,7 +84,11 @@ FINISHED OPTIMIZATIONS:
 FAILED OPTIMIZATIONS:
 - essentially automatic collection of environments
   - closures extend the scope of environments -- need garbage collection...
-
+- interleave cars and cdrs -- spatial locality
+  - and have a cons Object be a pointer (saves 1 add for car)
+  - potentially halves cache misses (?)
+  - seems to make basically no difference, though not tested extensively
+  
 TRY AGAIN:
 - automatic collection of environments
   - only closures extend the environment
@@ -95,7 +99,6 @@ TRY AGAIN:
     - option 1: reorder arglist
       - have argl be an array first to make this easy
     - option 2: only collect variables at the end of the variable list
-
 
 OPTIMIZATIONS:
 SICP:
@@ -113,9 +116,6 @@ C:
 - split primitive env array from runtime array (reduces binary size)
 - symbol table should be created at compile time
 - inline pointer data into the Object (saves a dereference) (but then what about eqp?)
-- interleave cars and cdrs -- spatial locality
-  - and have a cons Object be a pointer (saves 1 add for car)
-  - potentially halves cache misses (?)
 - multithreading
   - makes code more complicated
 

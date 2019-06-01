@@ -19,7 +19,7 @@ Object lexical_address_lookup(Object, Object, Env);
 
 void define_variablem(Object, Object, Object, Env);
 
-Object extend_environment(Object, Object, Env);
+Env extend_environment(Object, Object, Env);
 inline void retract_environment(Object amount) {
   env_free_index -= obj_to_int(amount);
 }

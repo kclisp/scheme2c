@@ -158,13 +158,14 @@
   (let* ((vars (lambda-vars exp))
          ;; the end of a lambda should retract-environment
          ;; examine internal lambdas, order vars by retractability
-         (examined (lambda-annotation exp))
-         (vars (car examined))
-         (num-retract (cadr examined))
-         ;possibly include retracting parent env
-         (linkage `(lambda-ending ,num-retract))
-         (end-linkage
-          (if (zero? num-retract) 'return linkage)))
+         ;; (examined (lambda-annotation exp))
+         ;; (vars (car examined))
+         ;; (num-retract (cadr examined))
+         ;; ;possibly include retracting parent env
+         ;; (linkage `(lambda-ending ,num-retract))
+         ;; (end-linkage
+          ;; (if (zero? num-retract) 'return linkage))
+    )
     ;;need to reorder argl to match new variable order
     ;;waiting until argl is an array
     (append-instruction-sequences

@@ -35,8 +35,8 @@ void define_variablem(Object env_num, Object offset_num, Object val, Env env) {
   *lexical_address(obj_to_int(env_num), obj_to_int(offset_num), env) = val;
 }
 
-Object extend_environment(Object num_vars, Object argl, Env env) {
-  Object new_env = adr_to_obj(env_mem + env_free_index);
+Env extend_environment(Object num_vars, Object argl, Env env) {
+  Env new_env = adr_to_obj(env_mem + env_free_index);
   int num = obj_to_int(num_vars);
   assert(env_free_index + num <= max_env_mem_objects);
   
