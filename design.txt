@@ -89,13 +89,20 @@ TRY AGAIN:
 - automatic collection of environments
   - only closures extend the environment
   - thus, in a lambda, if one of its variable appears in an internal lambda, then that can't be collected. Otherwise it can. In this way, most variables can get collected.
+  - balance of speed and memory...
+  - problem: to make the most out of this, the variables have to be reordered
+  - but the arglist is created ahead of time.
+    - option 1: reorder arglist
+      - have argl be an array first to make this easy
+    - option 2: only collect variables at the end of the variable list
+
 
 OPTIMIZATIONS:
 SICP:
 - open-coding primitives
 - have argl construct an array
 - procedure application -- should compile operands first -- then no need to save proc
-
+  - in fact, proc might disappear entirely
 C:
 - can stack operations be optimized away?
 - make sure functions are inlined

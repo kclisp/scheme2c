@@ -98,9 +98,9 @@
 
 (make-test 'nested-lambdas
            '(define (foo x y)
-              (display (+ x y))
-              (lambda (z) (+ y z)))    ;x should get collected.
-           '(foo 1 2)
+              (if (= x 0)
+                  (+ x y)               ;x should get collected, so the order is (y x)
+                  (lambda (z) (+ y z)))) ;z and parent should get collected
+           '(foo 0 2)
            '((foo 3 4) 5))
-;;After internal lambda is applied, z should also be collected
-
+;;unhappy: env is saved before proc, but it only needs to be saved in the compiled branch

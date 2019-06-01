@@ -156,18 +156,27 @@
 
 (define (compile-lambda-body exp proc-entry cenv)
   (let* ((vars (lambda-vars exp))
-         (num-vars (length vars))
-         (linkage `(lambda-ending ,num-vars))) ;the end of a lambda should retract-environment
+         ;; the end of a lambda should retract-environment
+         ;; examine internal lambdas, order vars by retractability
+         (examined (lambda-annotation exp))
+         (vars (car examined))
+         (num-retract (cadr examined))
+         ;possibly include retracting parent env
+         (linkage `(lambda-ending ,num-retract))
+         (end-linkage
+          (if (zero? num-retract) 'return linkage)))
+    ;;need to reorder argl to match new variable order
+    ;;waiting until argl is an array
     (append-instruction-sequences
      (make-instruction-sequence '(env proc argl) '(env)
       `(,proc-entry
         (assign env (op compiled-procedure-env) (reg proc))
         (assign env
                 (op extend-environment)
-                (const ,num-vars)
+                (const ,(length vars))
                 (reg argl)
                 (reg env))))
-     (compile-sequence (lambda-body exp) 'val 'return ;; linkage
+     (compile-sequence (lambda-body exp) 'val 'return ;; end-linkage
                        (extend-cenv vars cenv)))))
 
 

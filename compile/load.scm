@@ -1,8 +1,11 @@
 (load '("syntax"
-        "macroexpand"
         "register"
         "instructions"
         "labels"
+        
+        "macroexpand"
+        "retract"
         "compile"
+        
         "cenv"
         "compiler"))
