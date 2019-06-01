@@ -15,7 +15,7 @@ speed:
 size:
 	$(eval OPTS += size)
 
-.PHONE: clean
+.PHONY: clean
 clean:
 	rm -f *~ *.o *.out
 	$(MAKE) -C ../c/ clean

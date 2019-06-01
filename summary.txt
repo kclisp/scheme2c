@@ -11,12 +11,11 @@ Scheme -------------> simpler scheme  ----------> register scheme ----------> C 
                                     Needed functions ------------------------------/
 
 TODO:
-1. Lexical addressing
-  - With this, the env in C can be an array (faster than using cons for the C env)
-2. Open coding primitives
-3. Scheme library
-4. More C base
-5. Needed functions
-   - We can do a full program analysis and so can have a binary with only the needed functions
-6. Types (?)
+- Open coding primitives
+- argl array
+- Scheme library
+- More C base
+- Needed functions
+  - We can do a full program analysis and so can have a binary with only the needed functions
+- Types (?)
 ...

@@ -62,6 +62,14 @@
 ;; [kenny@dellArch example]$ ./fact2.out 
 ;; 24
 
+(make-test 'fact3
+           '(define (fact n)
+              (if (= n 0)
+                  1
+                  (* n (fact (- n 1)))))
+           '(fact 2)
+           '(fact 3))
+
 (make-test 'map1
            '(define (map1 f list)
               (if (null? list)
@@ -83,3 +91,11 @@
                     (* x y z))))
              1 2 3 4 5))
 ;;should be 180
+
+(make-test 'lexical2 '(lambda (x) x))
+
+(make-test 'lexical3 '((lambda (x) x) 20))
+
+(make-test 'lexical4 '((lambda (x) (+ x 1) x) 20))
+
+(make-test 'lexical5 '((lambda (x) x (+ x 1)) 20))
