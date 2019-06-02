@@ -90,3 +90,5 @@
 
 ;;open-code primitive 2
 ;;202 ms
+
+;;rest args slow it down by about 5%

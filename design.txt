@@ -81,11 +81,15 @@ TODO:
 - quasiquote for sicp-compiler?
 - garbage collecter
 
+OPTIONAL:
+- warn when redefining primitives
+
 OPTIMIZATIONS:
 SICP:
 - "open-code" top-level compiled procedures
   - most top-level functions don't need allocated memory
 - have argl construct an array
+- compiled procedures don't necessarily modify all registers
 C:
 - precompile scheme library
 - define can be optimized away

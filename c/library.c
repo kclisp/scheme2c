@@ -46,7 +46,7 @@ Object numequal(Object argl) {
   return bool_to_obj(eqp(a, b));
 }
 
-//list - wrappers
+//list
 Object consl(Object argl) {
   return argl;
 }
@@ -58,6 +58,12 @@ Object cdrl(Object argl) {
 }
 Object nullpl(Object argl) {
   return bool_to_obj(nullp(car(argl)));
+}
+
+Object cons_star(Object argl) {
+  if (nullp(cdr(argl)))
+    return car(argl);
+  return cons(car(argl), cons_star(cdr(argl)));
 }
 
 //output
