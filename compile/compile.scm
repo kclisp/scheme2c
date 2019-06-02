@@ -62,17 +62,16 @@
     `((assign ,target (const ,(text-of-quotation exp)))))))
 
 (define (compile-variable exp target linkage cenv)
-  (let ((binding (cenv-get-binding exp cenv))
+  (let ((open-code (open-code exp cenv))
         (address (lexical-address-lookup exp cenv)))
-    (let* ((open-code (var-pproc? (binding-var binding) cenv))
-           (needs (if open-code '() '(env)))
-           (assignment
-            (if open-code
-                `((primitive-op ,(binding-val binding)))
-                `((op lexical-address-lookup)
-                  (const ,(car address))
-                  (const ,(cadr address))
-                  (reg env)))))
+    (let ((needs (if open-code '() '(env)))
+          (assignment
+           (if open-code
+               `((primitive-op ,open-code))
+               `((op lexical-address-lookup)
+                 (const ,(car address))
+                 (const ,(cadr address))
+                 (reg env)))))
       (end-with-linkage linkage
        (make-instruction-sequence needs (list target)
         `((assign ,target ,@assignment)))))))

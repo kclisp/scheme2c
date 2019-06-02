@@ -83,6 +83,11 @@
 (define (merge-types . types)
   (reduce-left merge-types-1 'other types))
 
+;;if var is a pproc in cenv, return val, otherwise, return false
+(define (open-code var cenv)
+  (and (var-pproc? var cenv)
+       (cenv-lookup var cenv binding-val (lambda () #f))))
+
 ;; (+ 1 2)                                 ;+ should get open-coded
 ;; (pp (compile-to-reg '(+ 1 2)))
 ;; ((assign val (const 2))
