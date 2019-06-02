@@ -84,7 +84,7 @@ TODO:
 OPTIMIZATIONS:
 SICP:
 - "open-code" top-level compiled procedures
-  - top-level memory doesn't need to be allocated
+  - most top-level memory doesn't need to be allocated
 - have argl construct an array
 C:
 - can stack operations be optimized away?
@@ -133,3 +133,8 @@ TRY AGAIN:
       - have argl be an array first to make this easy
     - option 2: only collect variables at the end of the variable list
       - con: doesn't save as much memory
+
+THINKING:
+- the difference in speed between implementing a function
+  - as a scheme primitive
+  - as part of the scheme library on top of the primitives
