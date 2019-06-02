@@ -7,7 +7,7 @@
 inline int eqp(Object a, Object b) {return a.u == b.u;}
 
 #define PRIMITIVE(scheme_name, c_name) Object c_name(Object);
-#include "primitives.def"
+#include "../data/primitives.def"
 #undef PRIMITIVE
 
 void displayi(Object);

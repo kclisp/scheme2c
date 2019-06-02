@@ -1,3 +1,4 @@
+;;;READ
 (define (read-file filename)
   (with-input-from-file filename
     (lambda ()
@@ -19,6 +20,18 @@
             '()
             (cons line (loop (read-line))))))))
 
+;;;FIND AND REPLACE
+;; assume no overlaps
+(define (find-and-replace base replace with)
+  (let ((index (string-search-forward replace base)))
+    (if (not index)
+        base
+        (string-append (string-slice base 0 index)
+                       with
+                       (find-and-replace (string-slice base (+ index (string-length replace)))
+                                         replace with)))))
+
+;;LIST SETS
 (define (list-union . s)
   (apply lset-union eq? s))
 

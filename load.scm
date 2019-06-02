@@ -5,7 +5,9 @@
       (lambda () (cd dir))
       (lambda () (load file))
       (lambda () (cd here)))))
+
 (load "utils")
+(cd-load "data" "data")
 (cd-load "compile" "load")
 (cd-load "ccompile" "load")
 (load "tests")

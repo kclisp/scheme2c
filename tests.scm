@@ -90,4 +90,4 @@
            '(define (linear + * a b x y)
               (+ (* a x) (* b y)))
            '(display (linear * + 2 3 4 5)))
-;; should be 45
+;; should be 48

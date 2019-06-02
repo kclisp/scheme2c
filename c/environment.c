@@ -8,14 +8,14 @@
 Object env_mem[max_env_mem_objects] = {0,
                                       /* make_primitive_procedure - maybe should be a macro? */
 #define PRIMITIVE(scheme_name, c_name) ((Object)((uint64_t)c_name + exp_ones + pproc_tag)),
-#include "primitives.def"
+#include "../data/primitives.def"
 #undef PRIMITIVE
                                        0};
   
 //count up number of primitives
 uint64_t env_free_index = 1
 #define PRIMITIVE(scheme_name, c_name) + 1
-#include "primitives.def"
+#include "../data/primitives.def"
 #undef PRIMITIVE
                           ;
 

@@ -138,3 +138,4 @@ THINKING:
 - the difference in speed between implementing a function
   - as a scheme primitive
   - as part of the scheme library on top of the primitives
+- I don't check numargs for c functions
