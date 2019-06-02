@@ -1,4 +1,4 @@
-(define (template-file) "data/template.c")
+(define (template-file) (on-base "data/template.c"))
 (define (c-template)
   (read-file-to-string (template-file)))
 
@@ -7,7 +7,7 @@
   (find-and-replace (c-template) "//CODE" str))
 
 
-(define (primitive-file) "data/primitives.def")
+(define (primitive-file) (on-base "data/primitives.def"))
 (define (primitive-pairs)
   (map (lambda (line)
          (let ((par1 (string-find-next-char line #\())

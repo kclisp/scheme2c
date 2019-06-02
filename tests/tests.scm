@@ -1,6 +1,8 @@
 ;;Tests
+(define (compile-dir) "compiled")
 (define (make-test name . exps)
-  (compile-to-file (format #f "example/~a.c" name) (cons 'begin exps)))
+  (compile-to-file (format #f "~a/~a.c" (compile-dir) name)
+                   (cons 'begin exps)))
 
 ;;with val.u as return value
 (make-test 'adding '(+ 1 2))

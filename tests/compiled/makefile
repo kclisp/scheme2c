@@ -1,8 +1,10 @@
+C_DIR = ../../c/
+HERE_FROM_C_DIR = ../tests/compiled/
 OPTS = 
 
-# use the makefile in ../c
+# use the makefile in ../../c
 %:
-	$(MAKE) -C ../c/ $(OPTS) ../example/$@.out
+	$(MAKE) -C $(C_DIR) $(OPTS) $(HERE_FROM_C_DIR)$@.out
 
 profile:
 	$(eval OPTS += profile)
@@ -18,4 +20,4 @@ size:
 .PHONY: clean
 clean:
 	rm -f *~ *.o *.out
-	$(MAKE) -C ../c/ clean
+	$(MAKE) -C $(C_DIR) clean

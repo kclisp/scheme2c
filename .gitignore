@@ -9,4 +9,4 @@
 *.o
 *.out
 
-example/*.c
+/tests/compiled/*.c
