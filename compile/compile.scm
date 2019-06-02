@@ -190,17 +190,25 @@
 ;;;combinations
 
 (define (compile-application exp target linkage cenv)
-  (let ((operand-codes
-         (map (lambda (operand) (compile operand 'val 'next cenv))
-              (operands exp)))
-        (proc-code (compile (operator exp) 'proc 'next cenv)))
-    (preserving '(cont)
-     (preserving '(env)
-      (construct-arglist operand-codes)
-      (preserving '(argl)
-       proc-code
-       (make-instruction-sequence '(argl) '() '()))) ;always save argl for procedure call
-     (compile-procedure-call (operator exp) target linkage cenv))))
+  (let ((operands (operands exp))
+        (operator (operator exp)))
+    (let ((operand-codes (map (lambda (operand) (compile operand 'val 'next cenv)) operands))
+          (proc-code (compile operator 'proc 'next cenv))
+          (open-code (and (variable? operator) (open-code operator cenv))))
+      (if open-code
+          (preserving '(cont)
+           (construct-arglist operand-codes)
+           (end-with-linkage linkage
+            (make-instruction-sequence '(argl) (list target)
+             `((assign ,target (op ,open-code)
+                               (reg argl))))))
+          (preserving '(cont)
+           (preserving '(env)
+            (construct-arglist operand-codes)
+            (preserving '(argl)
+             proc-code
+             (make-instruction-sequence '(argl) '() '()))) ;always save argl for procedure call
+           (compile-procedure-call target linkage))))))
 
 (define (construct-arglist operand-codes)
   (let ((operand-codes (reverse operand-codes)))
@@ -234,40 +242,29 @@
 
 ;;;applying procedures
 
-(define (compile-procedure-call operator target linkage cenv)
-  (define (prepend-label seq label)
-    (append-instruction-sequences label seq))
-  (define (append-label seq label)
-    (append-instruction-sequences seq label))
-  (let ((compiled-branch (make-label 'compiled-branch))
-        (primitive-branch (make-label 'primitive-branch))
+(define (compile-procedure-call target linkage)
+  (let ((primitive-branch (make-label 'primitive-branch))
+        (compiled-branch (make-label 'compiled-branch))
         (after-call (make-label 'after-call)))
-    (let* ((compiled-linkage
-             (if (eq? linkage 'next) after-call linkage))
-           (compiled-proc-seq
-            (compile-proc-appl target compiled-linkage))
-           (primitive-seq
-            (end-with-linkage linkage
-             (make-instruction-sequence '(proc argl)
-              (list target)
-              `((assign ,target
-                        (op apply-primitive-procedure)
-                        (reg proc)
-                        (reg argl)))))))
-      (let ((either
-             (append-instruction-sequences
-              (make-instruction-sequence '(proc) '()
-               `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
-              (parallel-instruction-sequences
-               (prepend-label compiled-proc-seq compiled-branch)
-               (prepend-label primitive-seq primitive-branch))
-              after-call)))
-        (if (variable? operator)
-            (cond
-             ((var-pproc? operator cenv) primitive-seq)
-             ((var-cproc? operator cenv) (append-label compiled-proc-seq after-call))
-             (else either))
-            either)))))
+    (let ((compiled-linkage
+           (if (eq? linkage 'next) after-call linkage)))
+      (append-instruction-sequences
+       (make-instruction-sequence '(proc) '()
+        `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
+       (parallel-instruction-sequences
+        (append-instruction-sequences
+         compiled-branch
+         (compile-proc-appl target compiled-linkage))
+        (append-instruction-sequences
+         primitive-branch
+         (end-with-linkage linkage
+          (make-instruction-sequence '(proc argl)
+                                     (list target)
+           `((assign ,target
+                     (op apply-primitive-procedure)
+                     (reg proc)
+                     (reg argl)))))))
+       after-call))))
 
 ;;;applying compiled procedures
 
