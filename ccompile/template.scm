@@ -1,7 +1,7 @@
 (define template-c-file "c/template.c")
 
 (define (c-template)
-  (read-file template-c-file))
+  (read-file-to-string template-c-file))
 
 ;;replace //CODE in template with string
 (define (template-replace str)

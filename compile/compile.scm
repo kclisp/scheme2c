@@ -80,15 +80,17 @@
   (let ((var (assignment-variable exp))
         (get-value-code
          (compile (assignment-value exp) 'val 'next cenv)))
-    (end-with-linkage linkage
-     (preserving '(env)
-      get-value-code
-      (make-instruction-sequence '(env val) (list target)
-       `((perform (op set-variable-value!)
-                  (const ,var)          ;change eventually
-                  (reg val)
-                  (reg env))
-         (assign ,target (const ok))))))))
+    (let ((address (lexical-address-lookup var cenv)))
+      (end-with-linkage linkage
+       (preserving '(env)
+        get-value-code
+        (make-instruction-sequence '(env val) (list target)
+         `((perform (op set-variable-value!)
+                    (const ,(car address))
+                    (const ,(cadr address))
+                    (reg val)
+                    (reg env))
+           (assign ,target (const ok)))))))))
 
 (define (compile-definition exp target linkage cenv)
   (let ((var (definition-variable exp)))
@@ -208,7 +210,8 @@
             (preserving '(argl)
              proc-code
              (make-instruction-sequence '(argl) '() '()))) ;always save argl for procedure call
-           (compile-procedure-call target linkage))))))
+           (compile-procedure-call target linkage (and (variable? operator)
+                                                       (var-cproc? operator cenv))))))))
 
 (define (construct-arglist operand-codes)
   (let ((operand-codes (reverse operand-codes)))
@@ -242,29 +245,31 @@
 
 ;;;applying procedures
 
-(define (compile-procedure-call target linkage)
+(define (compile-procedure-call target linkage cproc)
   (let ((primitive-branch (make-label 'primitive-branch))
         (compiled-branch (make-label 'compiled-branch))
         (after-call (make-label 'after-call)))
-    (let ((compiled-linkage
-           (if (eq? linkage 'next) after-call linkage)))
-      (append-instruction-sequences
-       (make-instruction-sequence '(proc) '()
-        `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
-       (parallel-instruction-sequences
-        (append-instruction-sequences
-         compiled-branch
-         (compile-proc-appl target compiled-linkage))
-        (append-instruction-sequences
-         primitive-branch
-         (end-with-linkage linkage
-          (make-instruction-sequence '(proc argl)
-                                     (list target)
-           `((assign ,target
-                     (op apply-primitive-procedure)
-                     (reg proc)
-                     (reg argl)))))))
-       after-call))))
+    (let* ((compiled-linkage
+            (if (eq? linkage 'next) after-call linkage))
+           (compile-seq (compile-proc-appl target compiled-linkage)))
+      (if cproc
+          (append-instruction-sequences compile-seq after-call)
+          (append-instruction-sequences
+           (make-instruction-sequence '(proc) '()
+            `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
+           (parallel-instruction-sequences
+            (append-instruction-sequences
+             compiled-branch
+             compile-seq)
+            (append-instruction-sequences
+             primitive-branch
+             (end-with-linkage linkage
+              (make-instruction-sequence '(proc argl) (list target)
+               `((assign ,target
+                         (op apply-primitive-procedure)
+                         (reg proc)
+                         (reg argl)))))))
+           after-call)))))
 
 ;;;applying compiled procedures
 

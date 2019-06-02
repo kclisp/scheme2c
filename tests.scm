@@ -43,17 +43,7 @@
 ;; [kenny@dellArch example]$ ./define.out 
 ;; 21
 
-(make-test 'fact1
-           '(define (fact n)
-              (if (= n 0)
-                  1
-                  (* n (fact (- n 1))))))
-;; [kenny@dellArch example]$ ./fact1.out 
-;; [kenny@dellArch example]$ echo $?
-;; 9
-;;similarly, cons index
-
-(make-test 'fact2
+(make-test 'fact
            '(define (fact n)
               (if (= n 0)
                   1
@@ -62,20 +52,12 @@
 ;; [kenny@dellArch example]$ ./fact2.out 
 ;; 24
 
-(make-test 'fact3
-           '(define (fact n)
-              (if (= n 0)
-                  1
-                  (* n (fact (- n 1)))))
-           '(fact 2)
-           '(fact 3))
-
 (make-test 'map1
-           '(define (map1 f list)
-              (if (null? list)
+           '(define (map1 f lst)
+              (if (null? lst)
                   '()
-                  (let ((head (f (car list)))) ;force evaluation order
-                    (cons head (map1 f (cdr list))))))
+                  (let ((head (f (car lst)))) ;force evaluation order
+                    (cons head (map1 f (cdr lst))))))
            '(map1 display '(1.3 2 hi "hello")))
 ;; [kenny@dellArch example]$ ./map1.out 
 ;; 1.300000
@@ -103,4 +85,9 @@
                   (lambda (z) (+ y z)))) ;z and parent should get collected
            '(foo 0 2)
            '((foo 3 4) 5))
-;;unhappy: env is saved before proc, but it only needs to be saved in the compiled branch
+
+(make-test 'open-coded
+           '(define (linear + * a b x y)
+              (+ (* a x) (* b y)))
+           '(display (linear * + 2 3 4 5)))
+;; should be 45

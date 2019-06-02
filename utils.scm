@@ -1,6 +1,14 @@
 (define (read-file filename)
   (with-input-from-file filename
     (lambda ()
+      (let loop ((obj (read)))
+        (if (eof-object? obj)
+            '()
+            (cons obj (loop (read))))))))
+
+(define (read-file-to-string filename)
+  (with-input-from-file filename
+    (lambda ()
       (read-delimited-string (char-set)))))
 
 (define (read-lines filename)

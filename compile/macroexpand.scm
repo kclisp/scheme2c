@@ -42,7 +42,7 @@
   (and (definition? exp)
        (pair? (cadr exp))))
 (define (edefine->lambda exp)
-  `(define ,(edefine-symbol (cadr exp)) ,(edefine-expand (cadr exp) (caddr exp))))
+  `(define ,(edefine-symbol (cadr exp)) ,@(edefine-expand (cadr exp) (cddr exp))))
 (define (edefine-symbol nested)
   (if (pair? nested)
       (edefine-symbol (car nested))
@@ -50,7 +50,7 @@
 (define (edefine-expand nested body)
   (if (pair? nested)
       (edefine-expand (car nested)
-                      `(lambda ,(cdr nested) ,body))
+                      `((lambda ,(cdr nested) ,@body)))
       body))
 
 ;;internal definition
@@ -59,7 +59,7 @@
        (definition? (car (lambda-body exp)))))
 ;;return list of variable value pairs
 (define (idefine-definitions exp)
-  (map cdr (filter definition? (lambda-body exp))))
+  (map cdr (map edefine->lambda (filter definition? (lambda-body exp)))))
 (define (idefine-body exp)
   (remove definition? (lambda-body exp)))
 
@@ -70,6 +70,7 @@
           (sets (map (lambda (def) (cons 'set! def))
                      definitions))
           (body (idefine-body exp)))
-      `(let ,@new-bindings
-         ,@sets
-         ,@body))))
+      `(lambda ,(lambda-parameters exp)
+         (let (,@new-bindings)
+           ,@sets
+           ,@body)))))

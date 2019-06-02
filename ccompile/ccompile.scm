@@ -67,7 +67,7 @@
   (case (arg-type arg)
     ((label) (format #f "adr_to_obj(&&~a)" (arg-val arg)))
     ((reg) (arg-val arg))
-    ((primitive-op) (format #f "adr_to_obj(~a)" (arg-val arg)))
+    ((primitive-op) (format #f "make_primitive_procedure(~a)" (arg-val arg)))
     ((const) (ccompile-const (cadr arg)))
     (else (error "Unknown arg-type -- CCOMPILE-ARG" arg))))
 
