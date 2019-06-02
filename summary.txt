@@ -1,14 +1,16 @@
 SUMMARY:
 
-        Macroexpand                     Compile                     CCompile     Wrap                 Assemble
-Scheme -------------> simpler scheme  ----------> register scheme ----------> C ------> C (complete) ----------> Executable
-                                           A
-                                           | Data
-                                           V
-                                    Lexical addressing
-                                    Open-Code primitives
-                                    Needed functions
-                                    Etc.
+        Macroexpand                    Compile                    CCompile                 Wrap                 Assemble
+Scheme -------------> simpler scheme  ---------> register scheme ----------> C (fragment) ------> C (complete) ----------> Executable
+                                          A                                                  A
+                                          |                                                  |
+                                          |<-------------------- Data -----------------------/
+                                          |
+                                          V
+                                   Lexical addressing
+                                   Open-Code primitives
+                                   Needed functions
+                                   Etc.
 TODO:
 - metacircular evaluator
   - more c primitives
