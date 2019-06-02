@@ -55,16 +55,15 @@
   (cons 'lambda (cons parameters body)))
 
 (define (if? exp) (tagged-list? exp 'if))
-
 (define (if-predicate exp) (cadr exp))
-
 (define (if-consequent exp) (caddr exp))
-
 (define (if-alternative exp)
   (if (not (null? (cdddr exp)))
       (cadddr exp)
       'false))
 
+(define (if-exps exp)
+  (list (if-predicate exp) (if-consequent exp) (if-alternative exp)))
 
 (define (begin? exp) (tagged-list? exp 'begin))
 (define (begin-actions exp) (cdr exp))

@@ -5,9 +5,10 @@
   (let* ((cenv (get-primitives-cenv))
          (init-length (cenv-num-bindings cenv))
          (exp (macroexpand exp)))
-    ;; (annotate-lambdas exp)
-    (let* ((compiled (caddr (compile exp 'val 'next cenv)))
-           (new-length (cenv-num-bindings cenv)))
+    (annotate-cenv! exp cenv)
+    ;; (annotate-lambdas! exp)
+    (let ((new-length (cenv-num-bindings cenv))
+          (compiled (caddr (compile exp 'val 'next cenv))))
       ;; the top level environment was extended
       (if (> new-length init-length)
           (cons `(perform (op increase-env-size)
@@ -26,4 +27,8 @@
        (read-lines (primitive-file))))
 
 (define (get-primitives-cenv)
-  (make-initial-cenv (primitives)))
+  (make-initial-cenv
+   (make-frame
+    (map (lambda (prim)
+           (make-binding prim 'pproc))
+         (primitives)))))

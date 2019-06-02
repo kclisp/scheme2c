@@ -74,7 +74,7 @@
 (define (compile-assignment exp target linkage cenv)
   (let ((var (assignment-variable exp))
         (get-value-code
-         (compile (assignment-value exp) 'val 'next cenv))) ;open-code eventually
+         (compile (assignment-value exp) 'val 'next cenv)))
     (end-with-linkage linkage
      (preserving '(env)
       get-value-code
@@ -87,7 +87,6 @@
 
 (define (compile-definition exp target linkage cenv)
   (let ((var (definition-variable exp)))
-    (cenv-define-var! var cenv)
     (let ((address (lexical-address-lookup var cenv)))
       (end-with-linkage linkage
        (preserving '(env)
@@ -110,7 +109,7 @@
         (after-if (make-label 'after-if)))
     (let ((consequent-linkage
            (if (eq? linkage 'next) after-if linkage)))
-      (let ((p-code (compile (if-predicate exp) 'val 'next cenv)) ;can modify cenv via set!, affecting consequence and alternative
+      (let ((p-code (compile (if-predicate exp) 'val 'next cenv))
             (c-code
              (compile
               (if-consequent exp) target consequent-linkage cenv))
@@ -196,7 +195,7 @@
       (preserving '(argl)
        proc-code
        (make-instruction-sequence '(argl) '() '()))) ;always save argl for procedure call
-     (compile-procedure-call target linkage))))
+     (compile-procedure-call (operator exp) target linkage cenv))))
 
 (define (construct-arglist operand-codes)
   (let ((operand-codes (reverse operand-codes)))
@@ -230,29 +229,40 @@
 
 ;;;applying procedures
 
-(define (compile-procedure-call target linkage)
-  (let ((primitive-branch (make-label 'primitive-branch))
-        (compiled-branch (make-label 'compiled-branch))
+(define (compile-procedure-call operator target linkage cenv)
+  (define (prepend-label seq label)
+    (append-instruction-sequences label seq))
+  (define (append-label seq label)
+    (append-instruction-sequences seq label))
+  (let ((compiled-branch (make-label 'compiled-branch))
+        (primitive-branch (make-label 'primitive-branch))
         (after-call (make-label 'after-call)))
-    (let ((compiled-linkage
-           (if (eq? linkage 'next) after-call linkage)))
-      (append-instruction-sequences
-       (make-instruction-sequence '(proc) '()
-        `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
-       (parallel-instruction-sequences
-        (append-instruction-sequences
-         compiled-branch
-         (compile-proc-appl target compiled-linkage))
-        (append-instruction-sequences
-         primitive-branch
-         (end-with-linkage linkage
-          (make-instruction-sequence '(proc argl)
-                                     (list target)
-           `((assign ,target
-                     (op apply-primitive-procedure)
-                     (reg proc)
-                     (reg argl)))))))
-       after-call))))
+    (let* ((compiled-linkage
+             (if (eq? linkage 'next) after-call linkage))
+           (compiled-proc-seq
+            (compile-proc-appl target compiled-linkage))
+           (primitive-seq
+            (end-with-linkage linkage
+             (make-instruction-sequence '(proc argl)
+              (list target)
+              `((assign ,target
+                        (op apply-primitive-procedure)
+                        (reg proc)
+                        (reg argl)))))))
+      (let ((either
+             (append-instruction-sequences
+              (make-instruction-sequence '(proc) '()
+               `((test-branch (op primitive-procedure?) (reg proc) (label ,primitive-branch))))
+              (parallel-instruction-sequences
+               (prepend-label compiled-proc-seq compiled-branch)
+               (prepend-label primitive-seq primitive-branch))
+              after-call)))
+        (if (variable? operator)
+            (cond
+             ((var-pproc? operator cenv) primitive-seq)
+             ((var-cproc? operator cenv) (append-label compiled-proc-seq after-call))
+             (else either))
+            either)))))
 
 ;;;applying compiled procedures
 
@@ -260,10 +270,10 @@
 (define (compile-proc-appl target linkage)
   (define (label? obj) (not (or (eq? obj 'return) (lambda-ending? obj))))
   (let ((base `((assign val (op compiled-procedure-entry)
-                        (reg proc))
-                ,@(if (lambda-ending? linkage)
-                      (list (lambda-ending-sequence linkage))
-                      '())
+                            (reg proc))
+                ;; ,@(if (lambda-ending? linkage)
+                ;;       (list (lambda-ending-sequence linkage))
+                ;;       '())
                 (goto (reg val)))))
     (cond ((and (eq? target 'val) (label? linkage))
            (make-instruction-sequence '(proc) all-regs

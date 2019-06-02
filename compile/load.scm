@@ -2,10 +2,10 @@
         "register"
         "instructions"
         "labels"
+        "cenv"
         
         "macroexpand"
+        "open-code"
         "retract"
         "compile"
-        
-        "cenv"
         "compiler"))

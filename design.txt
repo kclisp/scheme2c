@@ -84,6 +84,7 @@ SICP:
 - procedure application -- should compile operands first -- then no need to save proc
   - in fact, proc might disappear entirely
     - turns out, this makes the benchmark slower. I'm not sure why
+  - in almost all use cases, this should be (slightly) better
 C:
 - inlined some functions
 

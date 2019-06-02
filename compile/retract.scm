@@ -1,7 +1,7 @@
 ;;macroexpanded
 ;;walk the expression tree, annotate lambdas with free vars and used-in-internal
 ;;put the annotation into an eq? hashtable
-(define (annotate-lambdas exp)
+(define (annotate-lambdas! exp)
   (var-usage exp))
 
 (define (var-usage exp)
@@ -17,15 +17,15 @@
          (add-free-body (definition-variable exp)
                         (var-usage (definition-value exp))))
         ((if? exp)
-         (var-usages (if-predicate exp) (if-consequent exp) (if-alternative exp)))
-        ((lambda? exp) (annotate-lambda exp))
+         (apply var-usages (if-exps)))
+        ((lambda? exp) (annotate-lambda! exp))
         ((begin? exp)
          (apply var-usages (begin-actions exp)))
         ((application? exp)
          (apply var-usages (operator exp) (operands exp)))
         (else (error "Unknown expression - VAR-USAGE"exp))))
 
-(define (annotate-lambda exp)
+(define (annotate-lambda! exp)
   (hash-table-ref lambda-var-usage exp
     (lambda ()
       (hash-table-intern! lambda-var-usage exp (lambda () (var-usage-lambda exp))))))

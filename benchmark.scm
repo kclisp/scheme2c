@@ -84,3 +84,6 @@
 
 ;;compile operands first
 ;;248 ms
+
+;;primitive/compiled procedure data
+;;225 ms
