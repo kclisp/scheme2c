@@ -16,6 +16,12 @@ The C code is wrapped around a minimal scheme library (in c).
 TODO: the rest of scheme can be implemented on top, in scheme.
 The final C code is then compiled into an executable.
 
+GOALS:
+- compile metacircular evaluator
+- same speed or faster compared to compiled mit scheme
+  - currently numerical programs (ack)
+- less memory than mit scheme
+
 
 TYPES
 via Nan tagging:
@@ -37,7 +43,6 @@ s: s (sign bit for (signed) integer)
 exp: 1s
 F: 1ii..i
 
-
 pointer (48 bits)
 ?1...10tttp..p
 s: ? (unused currently)
@@ -50,9 +55,10 @@ tags: 000 cons
       100 primitive procedure
       101 compound procedure
       110 address
-      111 boolean  -- wasteful... have boolean be part of address?
+      111 boolean  -- wasteful... have boolean be part of address? or put more types
 
 virtual address space currently has 48 bit pointers -- enough to fit
+
 
 MODIFICATIONS TO SICP-COMPILER
 - added let
@@ -63,17 +69,34 @@ MODIFICATIONS TO SICP-COMPILER
 - separate macroexpansions step
 - lexical addressing
 - procedure application -- operands compiled first
-
-GOALS:
-- compile metacircular evaluator
-- same speed or faster compared to compiled mit scheme
-  - currently numerical programs (ack)
-- less memory than mit scheme
+- open-coding
 
 TODO:
+- metacircular evaluator
+  - more c primitives
+  - create scheme library
+- speed and memory
+  - optimizations
 - quasiquote for sicp-compiler?
-- optimizations
 - garbage collecter
+
+OPTIMIZATIONS:
+SICP:
+- "open-code" top-level compiled procedures
+  - top-level memory doesn't need to be allocated
+- have argl construct an array
+C:
+- can stack operations be optimized away?
+  - for multiple same saves in a row, use peek instead
+- make sure functions are inlined
+- can make binary small by only putting functions that are needed into the top-level-env
+  - including scheme library and c primitives
+  - create the primitive env array from scheme -- only needed primitives
+- split primitive env array from runtime array (reduces binary size)
+- symbol table should be created at compile time
+- inline pointer data into the Object (saves a dereference) (but then what about eqp?)
+- multithreading
+  - makes code more complicated
 
 FINISHED OPTIMIZATIONS:
 SICP:
@@ -85,6 +108,8 @@ SICP:
   - in fact, proc might disappear entirely
     - turns out, this makes the benchmark slower. I'm not sure why
   - in almost all use cases, this should be (slightly) better
+- open-coding primitives
+- compile away check for compiled procedures
 C:
 - inlined some functions
 
@@ -106,28 +131,4 @@ TRY AGAIN:
     - option 1: reorder arglist
       - have argl be an array first to make this easy
     - option 2: only collect variables at the end of the variable list
-
-OPTIMIZATIONS:
-SICP:
-- open-coding primitives
-- "open-code" compiled procedures
-- have argl construct an array
-- compile away check for compiled procedures
-C:
-- can stack operations be optimized away?
-  - for multiple same saves in a row, use peek instead
-- make sure functions are inlined
-- can make binary small by only putting functions that are needed into the env
-  - including scheme library and c primitives (?)
-- create the primitive env array from scheme -- only needed primitives
-  - with lexical addressing, this doesn't save much though
-- split primitive env array from runtime array (reduces binary size)
-- symbol table should be created at compile time
-- inline pointer data into the Object (saves a dereference) (but then what about eqp?)
-- multithreading
-  - makes code more complicated
-
-NOTES:
-- binaries can currently be made pretty small. Stripping binaries:
-  - "Hello world" in C is 14.14k.
-  - Compiling for size, (display "Hello world") is 14.25k
+      - con: doesn't save as much memory
