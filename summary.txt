@@ -2,20 +2,18 @@ SUMMARY:
 
         Macroexpand                     Compile                     CCompile     Wrap                 Assemble
 Scheme -------------> simpler scheme  ----------> register scheme ----------> C ------> C (complete) ----------> Executable
-                                           |                                       A
-                                           | Data                                  |
-                                           V                                       |
-                                    Lexical addressing                             | Scheme library and C base
-                                    Open-Code primitives                           |
-                                    Types (?)                                      |
-                                    Needed functions ------------------------------/
-
+                                           A
+                                           | Data
+                                           V
+                                    Lexical addressing
+                                    Open-Code primitives
+                                    Needed functions
+                                    Etc.
 TODO:
-- Open coding primitives
-- argl array
-- Scheme library
-- More C base
-- Needed functions
-  - We can do a full program analysis and so can have a binary with only the needed functions
-- Types (?)
-...
+- metacircular evaluator
+  - more c primitives
+  - create scheme library
+- speed and memory
+  - optimizations
+- quasiquote for sicp-compiler?
+- garbage collecter

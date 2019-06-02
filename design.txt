@@ -70,6 +70,7 @@ MODIFICATIONS TO SICP-COMPILER
 - lexical addressing
 - procedure application -- operands compiled first
 - open-coding
+- compiled away check for compiled procedure
 
 TODO:
 - metacircular evaluator
