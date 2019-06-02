@@ -12,14 +12,8 @@
 ;; [kenny@dellArch example]$ echo $?
 ;; 3
 
-(make-test 'lambda '(lambda (x) (+ x 1)))
+(make-test 'lambda '((lambda (x) (+ x 1)) 20))
 ;; [kenny@dellArch example]$ ./lambda.out 
-;; [kenny@dellArch example]$ echo $?
-;; 4
-;;probably because the return value restricts the output, so this is the cons index
-
-(make-test 'lambda2 '((lambda (x) (+ x 1)) 20))
-;; [kenny@dellArch example]$ ./lambda2.out 
 ;; [kenny@dellArch example]$ echo $?
 ;; 21
 
@@ -30,10 +24,6 @@
 (make-test 'display2 '(display '(1.3 2 hi "hello" +)))
 ;; [kenny@dellArch example]$ ./display2.out 
 ;; (1.300000 2 hi hello +)
-
-(make-test 'display3 '(display +))
-;; [kenny@dellArch example]$ ./display3.out 
-;; #[primitive procedure 0x55d72e2b0d83]
 
 (make-test 'add '(display (+ 1 2 3 4 5)))
 ;; [kenny@dellArch example]$ ./add.out 
@@ -51,7 +41,7 @@
                   1
                   (* n (fact (- n 1)))))
            '(display (fact 4)))
-;; [kenny@dellArch example]$ ./fact2.out 
+;; [kenny@dellArch example]$ ./fact.out 
 ;; 24
 
 (make-test 'map1
@@ -79,7 +69,7 @@
 (make-test 'closure
            '(define ((adder x) y) (+ x y)) ;only y gets collected after the second call
            '((adder 3) 2))
-
+;; 5
 (make-test 'nested-lambdas
            '(define (foo x y)
               (if (= x 0)
@@ -87,7 +77,7 @@
                   (lambda (z) (+ y z)))) ;z and parent should get collected
            '(foo 0 2)
            '((foo 3 4) 5))
-
+;;9
 (make-test 'open-coded
            '(define (linear + * a b x y)
               (+ (* a x) (* b y)))
@@ -100,7 +90,10 @@
            '(varargs 1 2 3))
 ;; (1 2 3)
 
+(make-test 'cons_star
+           '(display (cons* 3 4 '(5 6))))
+;; (3 4 5 6)
+
 (make-test 'apply
-           '(define (foo a b)
-              (- a b))
-           '(apply foo 2 '(5)))
+           '(apply + 3 4 '(5 6)))
+;; 18

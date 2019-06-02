@@ -16,6 +16,8 @@
                            target
                            linkage
                            cenv))
+        ((assembly? exp)
+         (compile-assembly (assembly-sequences exp) target linkage cenv))
         ((application? exp)
          (compile-application exp target linkage cenv))
         (else
@@ -302,3 +304,7 @@
            (error "return linkage, target not val -- COMPILE"
                   target))
           (else (error "Unknown target and linkage -- COMPILE-PROC-APPL" target linkage)))))
+
+;;assembly -- currently very barebones
+(define (compile-assembly sequences target linkage cenv)
+  (make-instruction-sequence '() '() sequences))

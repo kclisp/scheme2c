@@ -101,3 +101,6 @@
 (define (let? exp) (tagged-list? exp 'let))
 (define (let-bindings exp) (cadr exp))
 (define (let-body exp) (cddr exp))
+
+(define (assembly? exp) (tagged-list? exp 'scheme-assembly))
+(define (assembly-sequences exp) (cdr exp))
