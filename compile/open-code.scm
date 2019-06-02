@@ -8,7 +8,7 @@
 
 ;;macroexpanded
 ;;top-level vs in-lambda aren't checked
-;;things like if could be optimized if it were
+;; things like if could be optimized if it were
 (define (annotate-cenv! exp cenv)
   (cond ((or (self-evaluating? exp)
              (quoted? exp)
@@ -19,6 +19,8 @@
                        cenv))
         ((definition? exp)
          (cenv-define-var! (definition-variable exp)
+                           (and (variable? exp)
+                                (cenv-lookup exp cenv binding-val (lambda () #f)))
                            (type-of (definition-value exp) cenv)
                            cenv))
         ;;no sense of branching... important?
@@ -47,10 +49,8 @@
              (definition? exp))
          'other)
         ((variable? exp)
-         (let ((binding (cenv-get-binding exp cenv)))
-           (if binding
-               (binding-type binding)
-               (error "Variable not in cenv -- TYPE-OF" exp))))
+         (cenv-lookup exp cenv binding-type
+                      (lambda () (error "Variable not in cenv -- TYPE-OF" exp))))
         ((if? exp)
          (type-ofs cenv (if-consequent exp) (if-alternative exp)))
         ((lambda? exp)
@@ -69,8 +69,11 @@
 
 ;;need to merge values
 (define (update-type! var type cenv)
-  (let ((binding (cenv-get-binding var cenv)))
-    (set-binding-type! binding (merge-types type (binding-type binding)))))
+  (cenv-lookup var cenv
+   (lambda (binding)
+     (set-binding-type! binding (merge-types type (binding-type binding))))
+   (lambda ()
+     (error "No binding in cenv -- UPDATE-TYPE!" var ))))
 
 ;;current merge is simple -- if different values, set type to other
 (define (merge-types-1 type1 type2)

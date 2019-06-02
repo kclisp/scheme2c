@@ -50,7 +50,7 @@
 (define (ccompile-args args)
   (let ((first-arg (car args)))
     (case (arg-type first-arg)
-      ((const label reg) (ccompile-arg first-arg)) ;reg probably
+      ((const label primitive-op reg) (ccompile-arg first-arg)) ;reg probably
       ((op) (ccompile-op args))
       (else (error "Unknown arg-type -- CCOMPILE-ARGS" args)))))
 
@@ -72,6 +72,7 @@
   (case (arg-type arg)
     ((label) (string-append "adr_to_obj(&&" (arg-val arg) ")"))
     ((reg) (arg-val arg))
+    ((primitive-op) (format #f "adr_to_obj(~a)" (arg-val arg)))
     ((const) (ccompile-const (cadr arg)))
     (else (error "Unknown arg-type -- CCOMPILE-ARG" arg))))
 

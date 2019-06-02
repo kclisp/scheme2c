@@ -87,3 +87,6 @@
 
 ;;primitive/compiled procedure data
 ;;225 ms
+
+;;open-code primitive
+;;218 ms

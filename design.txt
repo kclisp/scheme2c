@@ -110,6 +110,7 @@ TRY AGAIN:
 OPTIMIZATIONS:
 SICP:
 - open-coding primitives
+- "open-code" compiled procedures
 - have argl construct an array
 - compile away check for compiled procedures
 C:

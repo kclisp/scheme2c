@@ -1,7 +1,7 @@
 ;;cenv - (frame next-cenv)
 ;;frame is a list of bindings - (binding ...)
-;;binding is a list of variable and type (ccproc, pproc, other -- for top-level) - (var type)
-;; eventually add more fields (value)
+;;binding is a list of variable, value, and
+;; type (ccproc, pproc, other -- for top-level) - (var type)
 
 (define (lexical-address-lookup var cenv)
   (let ((address (cenv-get-address var cenv)))
@@ -18,7 +18,6 @@
           (if frame-address
               (list env-address frame-address)
               (loop (cenv-next-cenv cenv) (+ 1 env-address)))))))
-
 (define (frame-get-address var frame)
   (bindings-get-address var (frame-bindings frame)))
 (define (bindings-get-address var bindings)
@@ -29,23 +28,27 @@
      ((eq? var (binding-var (car bindings))) address)
      (else (loop (cdr bindings) (+ 1 address))))))
 
+(define (cenv-lookup var cenv if-found if-not-found)
+  (let ((binding (cenv-get-binding var cenv)))
+    (if binding
+        (if-found binding)
+        (if-not-found))))
 
 (define (cenv-get-binding var cenv)
-  (let ((binding (frame-get-binding var (cenv-frame cenv))))
-    (if binding
-        binding
-        (cenv-get-binding var (cenv-next-cenv cenv)))))
-
+  (if (null? cenv)
+      #f
+      (let ((binding (frame-get-binding var (cenv-frame cenv))))
+        (if binding
+            binding
+            (cenv-get-binding var (cenv-next-cenv cenv))))))
 (define (frame-get-binding var frame)
   (bindings-get-binding var (frame-bindings frame)))
 (define (bindings-get-binding var bindings)
   (find (lambda (binding) (eq? var (binding-var binding))) bindings))
 
 (define (cenv-var-type var cenv)
-  (let ((binding (cenv-get-binding var cenv)))
-    (if binding
-        (binding-type binding)
-        (error "var not in cenv -- CENV-VAR-TYPE" var))))
+  (cenv-lookup var cenv binding-type
+               (lambda () (error "var not in cenv -- CENV-VAR-TYPE" var))))
 
 (define (var-pproc? var cenv)
   (eq? (cenv-var-type var cenv) 'pproc))
@@ -53,13 +56,13 @@
   (eq? (cenv-var-type var cenv) 'cproc))
 
 ;;define for current env frame
-(define (cenv-define-var! var type cenv)
-  (frame-define-var! var type (cenv-frame cenv)))
-(define (frame-define-var! var type frame)
+(define (cenv-define-var! var val type cenv)
+  (frame-define-var! var val type (cenv-frame cenv)))
+(define (frame-define-var! var val type frame)
   (let ((binding (frame-get-binding var frame)))
     (if binding
         (set-binding-type! binding type)
-        (frame-extend! (make-binding var type) frame))))
+        (frame-extend! (make-binding var val type) frame))))
 
 (define (extend-cenv vars cenv)
   (make-cenv (vars->frame vars) cenv))
@@ -90,14 +93,16 @@
 (define (frame-bindings frame)
   frame)
 
-(define (make-binding var type)
-  (list var type))
+(define (make-binding var val type)
+  (list var val type))
 (define (binding-var binding)
   (car binding))
-(define (binding-type binding)
+(define (binding-val binding)
   (cadr binding))
+(define (binding-type binding)
+  (caddr binding))
 (define (set-binding-type! binding type)
-  (set-car! (cdr binding) type))
+  (set-car! (cddr binding) type))
 
 (define (make-default-binding var)
-  (list var 'other))
+  (make-binding var 'unbound 'other))
