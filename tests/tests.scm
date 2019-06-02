@@ -2,7 +2,7 @@
 (define (compile-dir) "compiled")
 (define (make-test name . exps)
   (compile-to-file (format #f "~a/~a.c" (compile-dir) name)
-                   (cons 'begin exps)))
+                   exps))
 
 ;;with val.u as return value
 (make-test 'adding '(+ 1 2))
@@ -93,3 +93,8 @@
               (+ (* a x) (* b y)))
            '(display (linear * + 2 3 4 5)))
 ;; should be 48
+
+(make-test 'apply
+           '(define (foo a b)
+              (- a b))
+           '(apply foo 2 '(5)))

@@ -19,3 +19,8 @@
                (list (symbol (substring line (+ 1 par1) com))
                      (symbol (substring line (+ 2 com) par2))))))
        (read-lines (primitive-file))))
+
+(define (scheme-library) (on-base "data/library.scm"))
+(define (add-scheme-library exp)
+  (append (read-file (scheme-library))
+          exp))

@@ -1,11 +1,11 @@
-(define (compile-to-file filename exp)
+(define (compile-to-file filename exps)
   (with-output-to-file filename
     (lambda ()
-      (display (template-replace (compile-to-c exp))))))
+      (display (template-replace (compile-to-c exps))))))
 
-(define (compile-to-c exp)
+(define (compile-to-c exps)
   (set! label-counter 0)
-  (sanitize (ccompile-sequence (compile-to-reg exp))))
+  (sanitize (ccompile-sequence (compile-to-reg exps))))
 
 
 (define (sanitize string)

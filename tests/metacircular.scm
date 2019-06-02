@@ -1,5 +1,5 @@
 ;;take sicp's mceval
-;;needed primitives: apply
+;;primitives: apply
 ;; number? string? symbol? null? eq?
 ;; cxr cons list set-car! set-cdr!
 ;; = < length
@@ -7,6 +7,8 @@
 ;; error
 ;; true false
 ;; map
+
+;;still needed: most of them
 
 (define (mceval) "mceval/mceval.scm")
 

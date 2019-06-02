@@ -84,9 +84,11 @@ TODO:
 OPTIMIZATIONS:
 SICP:
 - "open-code" top-level compiled procedures
-  - most top-level memory doesn't need to be allocated
+  - most top-level functions don't need allocated memory
 - have argl construct an array
 C:
+- precompile scheme library
+- define can be optimized away
 - can stack operations be optimized away?
   - for multiple same saves in a row, use peek instead
 - make sure functions are inlined
