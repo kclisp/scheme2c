@@ -42,14 +42,16 @@
 (define (lambda? exp) (tagged-list? exp 'lambda))
 
 (define (lambda-parameters exp) (cadr exp))
+(define (lambda-body exp) (cddr exp))
+
 (define (lambda-vars exp)
   (let argl-vars ((argl (lambda-parameters exp)))
     (cond
      ((pair? argl) (cons (car argl) (argl-vars (cdr argl))))
      ((null? argl) '())
      (else (list argl)))))
-(define (lambda-body exp) (cddr exp))
-
+(define (lambda-rest? exp)
+  (not (list? (lambda-parameters exp))))
 
 (define (make-lambda parameters body)
   (cons 'lambda (cons parameters body)))

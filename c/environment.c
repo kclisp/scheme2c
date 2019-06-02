@@ -3,6 +3,7 @@
 #include "cons.h"
 #include "library.h"
 #include "procedure.h"
+#include "boolean.h"
 
 //put all primitives
 Object env_mem[max_env_mem_objects] = {0,
@@ -35,17 +36,21 @@ void define_variablem(Object env_num, Object offset_num, Object val, Env env) {
   *lexical_address(obj_to_int(env_num), obj_to_int(offset_num), env) = val;
 }
 
-Env extend_environment(Object num_vars, Object argl, Env env) {
+Env extend_environment(Object num_vars, Object rest, Object argl, Env env) {
   Env new_env = adr_to_obj(env_mem + env_free_index);
   int num = obj_to_int(num_vars);
   assert(env_free_index + num <= max_env_mem_objects);
   
-  env_mem[env_free_index++] = env;
-  for (; num > 0; num--) {
+  env_mem[env_free_index++] = env; /* put parent env */
+  for (; num > 1; num--) {
     env_mem[env_free_index++] = car(argl);
     argl = cdr(argl);
   }
-  //last variable -- bound to rest - TODO
+  if (falsep(rest))
+    env_mem[env_free_index++] = car(argl);
+  else
+    env_mem[env_free_index++] = argl; /* rest arg */
+
   return new_env;
 }
 extern void retract_environment(Object);

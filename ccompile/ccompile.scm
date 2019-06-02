@@ -78,6 +78,7 @@
    ((symbol? const) (ccompile-symbol const))
    ((string? const) (ccompile-string const))
    ((vector? const) (ccompile-vector const))
+   ((boolean? const) (ccompile-boolean const))
    ((null? const) "nil")
    (else (error "Unknown type -- CCOMPILE-CONST" const))))
 ;; should be done statically at compile time...
@@ -94,3 +95,5 @@
   (format #f "str_to_obj(~s)" string))
 (define (ccompile-vector vector)
   "generic-const")
+(define (ccompile-boolean bool)
+  (if bool "true" "false"))

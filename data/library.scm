@@ -1,4 +1,4 @@
-;;; SCHEME LIBRARY - to be added to expressions
+;;; SCHEME LIBRARY - to be added to expressions, not evaluated directly
 
 ;; (define true #t)
 ;; (define false #f)

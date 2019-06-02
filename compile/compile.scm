@@ -162,6 +162,7 @@
 
 (define (compile-lambda-body exp proc-entry cenv)
   (let* ((vars (lambda-vars exp))
+         (rest? (lambda-rest? exp))
          ;; the end of a lambda should retract-environment
          ;; examine internal lambdas, order vars by retractability
          ;; (examined (lambda-annotation exp))
@@ -181,6 +182,7 @@
         (assign env
                 (op extend-environment)
                 (const ,(length vars))
+                (const ,rest?)
                 (reg argl)
                 (reg env))))
      (compile-sequence (lambda-body exp) 'val 'return ;; end-linkage

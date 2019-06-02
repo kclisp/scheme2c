@@ -1,5 +1,5 @@
 ;;Tests
-(define (compile-dir) "compiled")
+(define (compile-dir) (on-base "tests/compiled"))
 (define (make-test name . exps)
   (compile-to-file (format #f "~a/~a.c" (compile-dir) name)
                    exps))
@@ -93,6 +93,12 @@
               (+ (* a x) (* b y)))
            '(display (linear * + 2 3 4 5)))
 ;; should be 48
+
+(make-test 'varargs
+           '(define (varargs . x)
+              (display x))
+           '(varargs 1 2 3))
+;; (1 2 3)
 
 (make-test 'apply
            '(define (foo a b)
