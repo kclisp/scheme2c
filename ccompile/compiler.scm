@@ -7,11 +7,6 @@
   (set! label-counter 0)
   (sanitize (ccompile-sequence (compile-to-reg exp))))
 
-(define (line . args)
-  (string-append* (append args (list "\n"))))
-(define (statement . args)
-  (string-append* (append args (list ";\n"))))
-
 (define (sanitize string)
   (define state                         ;don't sanitize in strings
     (let ((in-string #f))

@@ -15,15 +15,13 @@
   (string-append* (map ccompile seq)))
 
 (define (ccompile-label exp)
-  (line (label-value exp) ":"))
+  (format #f "~a:\n" (label-value exp)))
 
 (define (ccompile-goto exp)
-  (statement "goto " (ccompile-dest (goto-dest exp))))
+  (format #f "goto ~a;\n" (ccompile-dest (goto-dest exp))))
 
 (define (ccompile-assign exp)
-  (statement (assign-dest exp)
-             " = "
-             (ccompile-args (assign-args exp))))
+  (format #f "~a = ~a;\n" (assign-dest exp) (ccompile-args (assign-args exp))))
 
 (define (ccompile-test-branch exp)
   (format #f "if (~a) ~a"
@@ -38,13 +36,13 @@
   (ccompile `(assign ,(restore-arg exp) (op restore))))
 
 (define (ccompile-perform exp)
-  (statement (ccompile-args (perform-args exp))))
-;;Details
+  (format #f "~a;\n" (ccompile-args (perform-args exp))))
 
+;;Details
 (define (ccompile-dest dest)
   (case (arg-type dest)
     ((label) (arg-val dest))
-    ((reg) (string-append "*obj_clear(" (arg-val dest) ")"))
+    ((reg) (format #f "*obj_clear(~a)" (arg-val dest)))
     (else (error "Unknown dest -- CCOMPILE-DEST" dest))))
 
 (define (ccompile-args args)
@@ -55,22 +53,19 @@
       (else (error "Unknown arg-type -- CCOMPILE-ARGS" args)))))
 
 (define (ccompile-op args)
-  (string-append (arg-val (car args))
-                 "("
-                 (if (null? (cdr args))
-                     ""
-                     (string-append
-                      (ccompile-arg (cadr args))
-                      (if (null? (cddr args))
-                          ""
-                          (string-append* (map (lambda (arg)
-                                                 (string-append ", " (ccompile-arg arg)))
-                                               (cddr args))))))
-                 ")"))
+  (format #f "~a(~a)"
+          (arg-val (car args))
+          (if (null? (cdr args))
+              ""
+              (apply string-append
+                     (ccompile-arg (cadr args))
+                     (map (lambda (arg)
+                            (format #f ", ~a" (ccompile-arg arg)))
+                          (cddr args))))))
 
 (define (ccompile-arg arg)
   (case (arg-type arg)
-    ((label) (string-append "adr_to_obj(&&" (arg-val arg) ")"))
+    ((label) (format #f "adr_to_obj(&&~a)" (arg-val arg)))
     ((reg) (arg-val arg))
     ((primitive-op) (format #f "adr_to_obj(~a)" (arg-val arg)))
     ((const) (ccompile-const (cadr arg)))
