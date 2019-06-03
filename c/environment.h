@@ -9,7 +9,7 @@ typedef Object Env;
 
 //Essentially a stack: variable values go here.
 //Eventually free up memory too, when procedure is done. -- failed
-#define max_env_mem_objects 1 << 21 /* this causes memory to go up because of initialization */
+#define max_env_mem_objects 1 << 9 /* this causes memory to go up because of initialization */
 extern Object env_mem[];
 extern uint64_t env_free_index;
 

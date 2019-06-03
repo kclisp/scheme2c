@@ -43,6 +43,15 @@ void test_cons() {
          nullp(con), pairp(con), nullp(cdr(con)));
   print_obj(car(car(con)));
   print_obj(cdr(car(con)));
+
+  Object con2 = con;
+  con = cons(int_to_obj(41), con);
+  displayi(con);
+  displayi(con2);
+  set_carm(cdr(con), str_to_obj("modified"));
+  displayi(con);
+  displayi(con2);
+  printf("\n");
 }
 void test_env() {
   printf("test_env\n");
@@ -52,7 +61,7 @@ void test_env() {
   print_obj(add_proc);
   printf("add: %p\n", add);
   
-  Object env = extend_environment(int_to_obj(1), cons(int_to_obj(22), nil), top_level_env);
+  Object env = extend_environment(int_to_obj(1), false, cons(int_to_obj(22), nil), top_level_env);
   print_obj(lexical_address_lookup(int_to_obj(0), int_to_obj(0), env));
   print_obj(lexical_address_lookup(int_to_obj(1), int_to_obj(0), env));
 
@@ -79,6 +88,27 @@ void test_lib() {
   print_obj(add(argl));
   argl = cons(int_to_obj(41), argl);
   print_obj(add(argl));
+
+  argl = cons(int_to_obj(40), nil);
+  print_obj(numberpl(argl));
+  print_obj(integerpl(argl));
+  print_obj(stringpl(argl));
+
+  argl = cons(int_to_obj(40), argl);
+  print_obj(numequal(argl));
+  print_obj(less_than(argl));
+  set_carm(argl, int_to_obj(39));
+  print_obj(numequal(argl));
+  print_obj(less_than(argl));
+  
+  displayi(cons(cons(int_to_obj(10), int_to_obj(2)), str_to_obj("hi")));
+  printf("\n");
+
+  printf("Please input: ");
+  Object obj = read(nil);
+  print_obj(obj);
+  displayi(obj);
+  printf("\n");
 }
 void test_stack() {
   printf("test_stack\n");

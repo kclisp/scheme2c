@@ -33,9 +33,6 @@ Object stringpl(Object argl) {
 Object symbolpl(Object argl) {
   return bool_to_obj(sym_typep(car(argl)));
 }
-Object pairpl(Object argl) {
-  return bool_to_obj(cons_typep(car(argl)));
-}
 
 //arithmetic
 Object add(Object argl) {
@@ -120,6 +117,9 @@ Object set_cdrml(Object argl) {
 Object nullpl(Object argl) {
   return bool_to_obj(nullp(car(argl)));
 }
+Object pairpl(Object argl) {
+  return bool_to_obj(pairp(car(argl)));
+}
 
 //output
 Object newline(Object argl) {
@@ -139,6 +139,10 @@ static void print_cons(Object obj)  {
     obj = cdr(obj);
     if (pairp(obj))
       printf(" ");
+    else if (!cons_typep(obj)) {
+      printf(" . ");
+      displayi(obj);
+    }
   }
   printf(")");
 }
@@ -177,6 +181,11 @@ Object read(Object argl) {
   //ignore argl for now; read from user
   char buf[BUF_SIZE];
   fgets(buf, BUF_SIZE, stdin);
+  //get rid of newline
+  int last = strlen(buf)-1;
+  if (last > -1 && buf[last] == '\n')
+    buf[last] = 0;
+  
   return readi(buf);            /* returns END_OF_INPUT if nothing */
 }
 
@@ -234,30 +243,31 @@ static int strsats(char *start, char *end, int (*func)(int)) {
         return 0;
     }
   } else {
-    while (*start != 0) {
+    while (*start) {
       if (!func(*start))
         return 0;
+      start++;
     }
   }
   return 1;
 }
 Object readi_atom(char *buf) {
   //if all numbers, no dot -- integer
-  //all numbers, but with 1 dot -- doubleNN
+  //all numbers, but with 1 dot -- double
   //else symbol
   char *dot = strchr(buf, '.');
   if (dot) {
     if (strsats(buf, dot, isdigit) &&
-        strsats(dot, NULL, isdigit)) {
+        strsats(dot+1, NULL, isdigit)) {
       double dbl;
-      sscanf(buf, "%f", &dbl);
+      sscanf(buf, "%lf", &dbl);
       return dbl_to_obj(dbl);
     }
     return readi_symbol(buf);
   }
   if (strsats(buf, NULL, isdigit)) {
     int64_t i;
-    sscanf(buf, PRId64, &i);
+    sscanf(buf, "%" SCNd64, &i);
     return int_to_obj(i);
   }
   return readi_symbol(buf);
