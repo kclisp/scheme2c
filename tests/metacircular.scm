@@ -8,9 +8,10 @@
 ;; true false
 ;; map
 
-;;still needed: most of them
+;;still needed:
+;; read (lists)
 
-(define (mceval) "mceval/mceval.scm")
+(define (mceval) (on-base "tests/mceval/mceval.scm"))
 
 (apply make-test 'mceval
        (read-file (mceval)))

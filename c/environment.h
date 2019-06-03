@@ -18,6 +18,7 @@ extern uint64_t env_free_index;
 Object lexical_address_lookup(Object, Object, Env);
 
 void define_variablem(Object, Object, Object, Env);
+void set_variable_valuem(Object, Object, Object, Env);
 
 Env extend_environment(Object, Object, Object, Env);
 inline void retract_environment(Object amount) {

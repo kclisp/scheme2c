@@ -65,7 +65,7 @@
 
 (define (idefine->lambda exp)
   (let ((definitions (idefine-definitions exp)))
-    (let ((new-bindings (map (lambda (def) (list (car def) '*unassigned*))
+    (let ((new-bindings (map (lambda (def) (list (car def) ''*unassigned*))
                              definitions))
           (sets (map (lambda (def) (cons 'set! def))
                      definitions))

@@ -11,5 +11,16 @@ inline int eqp(Object a, Object b) {return a.u == b.u;}
 #undef PRIMITIVE
 
 void displayi(Object);
+Object readi(char *);
+Object readi_list(char *);
+
+#define max_string_mem 1 << 11
+char string_mem[max_string_mem];
+int string_free_index;
+
+char *readi_to_string(char *);
+Object readi_string(char *);
+Object readi_symbol(char *);
+Object readi_atom(char *);
 
 #endif

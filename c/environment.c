@@ -31,9 +31,11 @@ Object lexical_address_lookup(Object env_num, Object offset_num, Env env) {
   return *lexical_address(obj_to_int(env_num), obj_to_int(offset_num), env);
 }
 
-//should be the same as assignment, once i get to it
 void define_variablem(Object env_num, Object offset_num, Object val, Env env) {
   *lexical_address(obj_to_int(env_num), obj_to_int(offset_num), env) = val;
+}
+void set_variable_valuem(Object env_num, Object offset_num, Object val, Env env) {
+  define_variablem(env_num, offset_num, val, env);
 }
 
 Env extend_environment(Object num_vars, Object rest, Object argl, Env env) {

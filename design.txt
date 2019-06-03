@@ -78,6 +78,7 @@ TODO:
   - create scheme library
 - speed and memory
   - optimizations
+- full number stack
 - quasiquote for sicp-compiler?
 - garbage collecter
 

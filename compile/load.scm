@@ -8,4 +8,5 @@
         "open-code"
         "retract"
         "compile"
+        "assembly"
         "compiler"))

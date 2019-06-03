@@ -5,7 +5,7 @@
   (let* ((cenv (get-primitives-cenv))
          (init-length (cenv-num-bindings cenv))
          (exps (macroexpand (add-scheme-library exps))))
-    ;;TODO: annotate can find references to scheme library functions -- then optimzize
+    ;;TODO: annotate can find references to scheme library functions -- then optimize
     (apply annotate-cenv!s cenv exps)
     ;; (annotate-lambdas! exp)
     (let ((new-length (cenv-num-bindings cenv))

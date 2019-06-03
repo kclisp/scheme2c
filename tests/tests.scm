@@ -4,36 +4,36 @@
   (compile-to-file (format #f "~a/~a.c" (compile-dir) name)
                    exps))
 
-;;with val.u as return value
-(make-test 'adding '(+ 1 2))
-;; [kenny@dellArch example]$ make adding
-;; ...
-;; [kenny@dellArch example]$ ./adding.out 
-;; [kenny@dellArch example]$ echo $?
-;; 3
+;; ;;with val.u as return value
+;; (make-test 'adding '(+ 1 2))
+;; ;; [kenny@dellArch example]$ make adding
+;; ;; ...
+;; ;; [kenny@dellArch example]$ ./adding.out 
+;; ;; [kenny@dellArch example]$ echo $?
+;; ;; 3
 
-(make-test 'lambda '((lambda (x) (+ x 1)) 20))
-;; [kenny@dellArch example]$ ./lambda.out 
-;; [kenny@dellArch example]$ echo $?
-;; 21
+;; (make-test 'lambda '((lambda (x) (+ x 1)) 20))
+;; ;; [kenny@dellArch example]$ ./lambda.out 
+;; ;; [kenny@dellArch example]$ echo $?
+;; ;; 21
 
-(make-test 'display '(display "Hello, world!\n"))
-;; [kenny@dellArch example]$ ./display.out 
-;; Hello, World!
+;; (make-test 'display '(display "Hello, world!\n"))
+;; ;; [kenny@dellArch example]$ ./display.out 
+;; ;; Hello, World!
 
-(make-test 'display2 '(display '(1.3 2 hi "hello" +)))
+(make-test 'display2 '(display '(1.3 2 hi "hello" + #f)))
 ;; [kenny@dellArch example]$ ./display2.out 
-;; (1.300000 2 hi hello +)
+;; (1.300000 2 hi hello + #f)
 
 (make-test 'add '(display (+ 1 2 3 4 5)))
 ;; [kenny@dellArch example]$ ./add.out 
 ;; 15
 
-(make-test 'define
-           '(define x 21)
-           'x)
-;; [kenny@dellArch example]$ ./define.out 
-;; 21
+;; (make-test 'define
+;;            '(define x 21)
+;;            'x)
+;; ;; [kenny@dellArch example]$ ./define.out 
+;; ;; 21
 
 (make-test 'fact
            '(define (fact n)
@@ -90,10 +90,14 @@
            '(varargs 1 2 3))
 ;; (1 2 3)
 
-(make-test 'cons_star
-           '(display (cons* 3 4 '(5 6))))
-;; (3 4 5 6)
-
 (make-test 'apply
            '(apply + 3 4 '(5 6)))
 ;; 18
+
+(make-test 'idefine
+           '(define (foo x)
+              (define (bar y)
+                (+ x y))
+              (bar 35))
+           '(foo 20))
+;;; 55
