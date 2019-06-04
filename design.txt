@@ -91,6 +91,7 @@ SICP:
   - most top-level functions don't need allocated memory
 - have argl construct an array
 - compiled procedures don't necessarily modify all registers
+- thunks can be simplified
 C:
 - precompile scheme library
 - define can be optimized away

@@ -94,6 +94,9 @@
            '(apply + 3 4 '(5 6)))
 ;; 18
 
+(make-test 'apply2
+           '(display (apply + 3 4 '(5 6))))
+
 (make-test 'idefine
            '(define (foo x)
               (define (bar y)
@@ -101,3 +104,8 @@
               (bar 35))
            '(foo 20))
 ;;; 55
+
+(make-test 'thunk
+           '(define (thunk)
+              (+ 1 2 3))
+           '(display (thunk)))

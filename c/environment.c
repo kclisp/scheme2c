@@ -48,9 +48,10 @@ Env extend_environment(Object num_vars, Object rest, Object argl, Env env) {
     env_mem[env_free_index++] = car(argl);
     argl = cdr(argl);
   }
-  if (falsep(rest))
-    env_mem[env_free_index++] = car(argl);
-  else
+  if (falsep(rest)){
+    if (num > 0)                /* not a thunk */
+      env_mem[env_free_index++] = car(argl);
+  } else
     env_mem[env_free_index++] = argl; /* rest arg */
 
   return new_env;

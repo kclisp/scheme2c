@@ -7,6 +7,7 @@
 ;;option 3: pass cont to compiled procedure
 (define (apply f . args)
   (scheme-assembly
+   (compile-variable 'args 'argl 'next this-cenv)
    '(assign argl (op cons_star) (reg argl)) ;not nice -- turn into some compile instruction?
    (compile-variable 'f 'proc 'next this-cenv) ;pass to scheme-assembly
    (compile-procedure-call 'val 'return #f)))

@@ -104,11 +104,14 @@ void test_lib() {
   displayi(cons(cons(int_to_obj(10), int_to_obj(2)), str_to_obj("hi")));
   printf("\n");
 
-  printf("Please input: ");
-  Object obj = read(nil);
-  print_obj(obj);
-  displayi(obj);
-  printf("\n");
+  /* printf("Please input: "); */
+  /* Object obj = read(nil); */
+  /* print_obj(obj); */
+  /* displayi(obj); */
+  /* printf("\n"); */
+
+  displayi(argl);
+  displayi(consl(argl));
 }
 void test_stack() {
   printf("test_stack\n");
