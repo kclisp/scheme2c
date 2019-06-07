@@ -2,7 +2,7 @@
 Scheme to C compiler written in Scheme and C
 
 Summary:
-
+```
         Macroexpand                    Compile                    CCompile                 Wrap                 Assemble
 Scheme -------------> simpler scheme  ---------> register scheme ----------> C (fragment) ------> C (complete) ----------> Executable
                                           A                                                  A
@@ -14,6 +14,7 @@ Scheme -------------> simpler scheme  ---------> register scheme ----------> C (
                                    Open-Code primitives
                                    Needed functions
                                    Etc.
+```
 TODO:
 - metacircular evaluator
   - more c primitives
